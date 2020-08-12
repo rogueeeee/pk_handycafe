@@ -78,21 +78,21 @@ namespace ui
         HWND btn_Check  = nullptr;
         HWND btn_About  = nullptr;
 
-        HWND btn_Feature_NoLockscreen_Enable = nullptr;
-        HWND btn_Feature_NoLockscreen_Disable = nullptr;
+        HWND btn_Feature_NoLockscreen_Enable       = nullptr;
+        HWND btn_Feature_NoLockscreen_Disable      = nullptr;
 
-        HWND btn_Feature_NoProcClear_Enable = nullptr;
-        HWND btn_Feature_NoProcClear_Disable = nullptr;
+        HWND btn_Feature_NoProcClear_Enable        = nullptr;
+        HWND btn_Feature_NoProcClear_Disable       = nullptr;
 
-        HWND btn_Feature_NoBrowserLogin_Enable = nullptr;
-        HWND btn_Feature_NoBrowserLogin_Disable = nullptr;
+        HWND btn_Feature_NoBrowserLogin_Enable     = nullptr;
+        HWND btn_Feature_NoBrowserLogin_Disable    = nullptr;
 
-        HWND btn_Feature_NoRemoteShutdown_Enable = nullptr;
-        HWND btn_Feature_NoRemoteShutdown_Disable = nullptr;
+        HWND btn_Feature_NoRemoteShutdown_Enable   = nullptr;
+        HWND btn_Feature_NoRemoteShutdown_Disable  = nullptr;
 
-        HWND btn_Feature_ExitHC = nullptr;
+        HWND btn_Feature_ExitHC                    = nullptr;
 
-        HWND btn_Feature_NoForegroundQuery_Enable = nullptr;
+        HWND btn_Feature_NoForegroundQuery_Enable  = nullptr;
         HWND btn_Feature_NoForegroundQuery_Disable = nullptr;
     }
 
@@ -100,25 +100,25 @@ namespace ui
     namespace id
     {
         PK_CTRL_ID(btn_Attach, 1);
-        PK_CTRL_ID(btn_Check, 2);
+        PK_CTRL_ID(btn_Check,  2);
 
-        PK_CTRL_ID(btn_Feature_NoLockscreen_Enable, 3);
+        PK_CTRL_ID(btn_Feature_NoLockscreen_Enable,  3);
         PK_CTRL_ID(btn_Feature_NoLockscreen_Disable, 4);
 
-        PK_CTRL_ID(btn_Feature_NoProcClear_Enable, 5);
+        PK_CTRL_ID(btn_Feature_NoProcClear_Enable,  5);
         PK_CTRL_ID(btn_Feature_NoProcClear_Disable, 6);
 
-        PK_CTRL_ID(btn_Feature_NoBrowserLogin_Enable, 7);
+        PK_CTRL_ID(btn_Feature_NoBrowserLogin_Enable,  7);
         PK_CTRL_ID(btn_Feature_NoBrowserLogin_Disable, 8);
 
-        PK_CTRL_ID(btn_Feature_NoRemoteShutdown_Enable, 9);
+        PK_CTRL_ID(btn_Feature_NoRemoteShutdown_Enable,   9);
         PK_CTRL_ID(btn_Feature_NoRemoteShutdown_Disable, 10);
 
         PK_CTRL_ID(btn_Feature_ExitHC, 11);
 
         PK_CTRL_ID(btn_About, 12);
 
-        PK_CTRL_ID(btn_Feature_NoForegroundQuery_Enable, 13);
+        PK_CTRL_ID(btn_Feature_NoForegroundQuery_Enable,  13);
         PK_CTRL_ID(btn_Feature_NoForegroundQuery_Disable, 14);
     }
     #undef PK_CTRL_ID
@@ -246,7 +246,7 @@ namespace utils
         if (!pt)
             return false;
 
-        while (pt)
+        do
         {
             DWORD oldProtect = 0; // Stores the old protection flag of the memory section
             unsigned char  singlebyte = _PKHC_OPCODE_NOP; // Used if allocation for the NOP patching is unecessary
@@ -277,10 +277,9 @@ namespace utils
 
             // Free the memory
             if (!pt->byte_new)
-                    delete[] bytearray;
+                delete[] bytearray;
 
-            pt = pt->next; // Load the next patch table
-        }
+        } while (pt = pt->next); // Load the next patch table
 
         return true;
     }
@@ -290,7 +289,7 @@ namespace utils
         if (!pt)
             return false;
 
-        while (pt)
+        do
         {
             DWORD oldProtect = 0; // Stores the old protection flag of the memory section
     
@@ -302,8 +301,7 @@ namespace utils
                 return false;
             }
 
-            pt = pt->next; // Load the next patchtable
-        }
+        } while (pt = pt->next); // Load the next patchtable
 
         return true;
     }

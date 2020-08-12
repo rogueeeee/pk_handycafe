@@ -1,5 +1,5 @@
-# <img width="28" src="https://en.touhouwiki.net/images/7/7b/Th135Patchouli.png"> <font size=80> pk for HandyCafe </font>
-Runtime patching and modification tool for HandyCafe
+# <img width="28" src="https://en.touhouwiki.net/images/7/7b/Th135Patchouli.png"> <font size=80> pk for handyCafe </font>
+Runtime patching and modification tool for handyCafe
 
 ## Features
 * <b>No logout lockscreen</b> - Disables logout of client both for Client (Logout user, Credit expiration, etc...) and Server (Logout user) side
@@ -8,6 +8,8 @@ Runtime patching and modification tool for HandyCafe
 * <b>No Remote shutdown</b> - Disables the remote shutdown feature that can be triggered by the server
 * <b>Exit handycafe</b> - Executes the exit routine of handycafe
 * <b>No foreground query</b> - Disables the Client's foreground query, preventing the server from gathering information regarding the currently focused window
+* <b>No Lockscreen focus</b> - Disables the lockscreen from forcing itself in the foreground <i>(Under development)</i>
+* <b>Authentication Bypass</b> - Bypasses the server side authentication allowing you to login with any credentials <i>(Under development)</i>
 
 ## Supported Versions
 * handyCafe 3.3.21 (21/July/2010)
