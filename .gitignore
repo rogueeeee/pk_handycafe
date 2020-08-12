@@ -1,0 +1,6 @@
+img.png
+copy_to_vmshared.cmd
+patchtable_4116.h
+*.exe
+patchtable_noauth.h
+notes.txt
