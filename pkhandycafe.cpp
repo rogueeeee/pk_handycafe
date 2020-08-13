@@ -123,7 +123,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             else if (ctrl_id == ui::id::btn_Feature_ExitHC)
                 pkhc::FeatureFn_exithc(PKHC_ENABLE);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable) ) || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
-                pkhc::FeatureFn_noserverforegroundinfo(flag);
+                pkhc::FeatureFn_noforegroundquery(flag);
 
             break;
         }
@@ -249,7 +249,7 @@ namespace features
             ui::status::set("Exit thread created!");
         }
 
-        void noserverforegroundinfo(FeatureMethod fm)
+        void noforegroundquery(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching foreground query..." : "Restoring foreground query...");
             if ( !(fm ?
@@ -262,6 +262,11 @@ namespace features
             }
 
             ui::status::set(fm ? "No foreground query enabled" : "No foreground query disabled");
+        }
+
+        void spooflockscreen(FeatureMethod fm)
+        {
+
         }
     }
 }
@@ -279,10 +284,13 @@ namespace pkhc
         handycafe::ver_a = handycafe::ver_b = handycafe::ver_c = 0;
 
         // Reset procedure: features
-        pkhc::FeatureFn_nolockscreen     = FeatureFn_default;
-        pkhc::FeatureFn_noprocclear      = FeatureFn_default;
-        pkhc::FeatureFn_nobrowseronlogin = FeatureFn_default;
-        pkhc::FeatureFn_noremoteshutdown = FeatureFn_default;
+        pkhc::FeatureFn_nolockscreen      = FeatureFn_default;
+        pkhc::FeatureFn_noprocclear       = FeatureFn_default;
+        pkhc::FeatureFn_nobrowseronlogin  = FeatureFn_default;
+        pkhc::FeatureFn_noremoteshutdown  = FeatureFn_default;
+        pkhc::FeatureFn_noforegroundquery = FeatureFn_default;
+        pkhc::FeatureFn_exithc            = FeatureFn_default;
+        pkhc::FeatureFn_spooflockscreen   = FeatureFn_default;
 
         // Reset procedure: handle
         CloseHandle(handycafe::handle);
@@ -452,35 +460,44 @@ namespace pkhc
             // Version is supported
             if (isNewerVer)
             {
-                #ifndef PKHC_DISABLE_SUPPORT_NEW
-
                 // Version 4.1.16
                 handycafe::ver = HC_VER_4_1_16;
-
+                
+                #ifndef PKHC_DISABLE_SUPPORT_NEW
+                #elif
+                pkhc::FeatureFn_nolockscreen      = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_noprocclear       = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_nobrowseronlogin  = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_noremoteshutdown  = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_exithc            = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_noforegroundquery = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_spooflockscreen   = pkhc::FeatureFn_notsupported;
                 #endif
             }
             else
             {
                 // Version 3.3.21
                 handycafe::ver = HC_VER_3_3_21;
-                pkhc::FeatureFn_nolockscreen           = features::v3321::nolockscreen;
-                pkhc::FeatureFn_noprocclear            = features::v3321::noprocclear;
-                pkhc::FeatureFn_nobrowseronlogin       = features::v3321::nobrowseronlogin;
-                pkhc::FeatureFn_noremoteshutdown       = features::v3321::noremoteshutdown;
-                pkhc::FeatureFn_exithc                 = features::v3321::exithc;
-                pkhc::FeatureFn_noserverforegroundinfo = features::v3321::noserverforegroundinfo;
+                pkhc::FeatureFn_nolockscreen      = features::v3321::nolockscreen;
+                pkhc::FeatureFn_noprocclear       = features::v3321::noprocclear;
+                pkhc::FeatureFn_nobrowseronlogin  = features::v3321::nobrowseronlogin;
+                pkhc::FeatureFn_noremoteshutdown  = features::v3321::noremoteshutdown;
+                pkhc::FeatureFn_exithc            = features::v3321::exithc;
+                pkhc::FeatureFn_noforegroundquery = features::v3321::noforegroundquery;
+                pkhc::FeatureFn_spooflockscreen   = features::v3321::spooflockscreen;
             }
         }
         else
         {
             // Version is unsupported
             handycafe::ver = HC_VER_UNSUPPORTED;
-            pkhc::FeatureFn_nolockscreen           = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noprocclear            = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_nobrowseronlogin       = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noremoteshutdown       = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_exithc                 = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noserverforegroundinfo = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_nolockscreen      = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_noprocclear       = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_nobrowseronlogin  = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_noremoteshutdown  = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_exithc            = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_noforegroundquery = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_spooflockscreen   = pkhc::FeatureFn_notsupported;
         }
 
 

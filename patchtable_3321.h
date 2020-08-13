@@ -7,7 +7,7 @@
 
 namespace patchtable_3321
 {
-    extern patchtable_t __NoLockScreen_child_desktop;
+    extern patchtable_t __NoLockScreen_next_desktop;
 
     patchtable_t NoLockScreen =
     {
@@ -15,10 +15,10 @@ namespace patchtable_3321
         "\x5D\xC3",
         0x125761,
         2,
-        &patchtable_3321::__NoLockScreen_child_desktop
+        &patchtable_3321::__NoLockScreen_next_desktop
     };
 
-    patchtable_t __NoLockScreen_child_desktop =
+    patchtable_t __NoLockScreen_next_desktop =
     {
         NoLockScreen.byte_old,
         NoLockScreen.byte_new,
@@ -58,12 +58,39 @@ namespace patchtable_3321
         2
     };
 
-    
-
-    namespace SpoofLockscreen_v
+    patchtable_t __SpoofLockscreen_next_adminalertserver =
     {
-        pkhc_offset_t getforeground_offset  = 0x9F693;
-    }
+        "\xE8\xC8\xE4\xFF\xFF",
+        nullptr,
+        0x128FE3,
+    };
+
+    patchtable_t __SpoofLockscreen_next_servercheckjump =
+    {
+        "\xEB\x5D",
+        nullptr,
+        0x156788,
+        2,
+        &patchtable_3321::__SpoofLockscreen_next_adminalertserver
+    };
+
+    patchtable_t __SpoofLockscreen_next_alertserver =
+    {
+        "\xE8\x41\x28\xFD\xFF",
+        nullptr,
+        0x1567E2,
+        5,
+        &patchtable_3321::__SpoofLockscreen_next_servercheckjump
+    };
+
+    patchtable_t SpoofLockscreen =
+    {
+        "\xFF\x53\x38",
+        nullptr,
+        0x9F693,
+        3,
+        &patchtable_3321::__SpoofLockscreen_next_alertserver
+    };
 
     namespace ExitHC_v
     {

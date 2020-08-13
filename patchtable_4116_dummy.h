@@ -12,11 +12,7 @@ namespace patchtable_4116
     patchtable_t NoBrowserOnLogin;
     patchtable_t NoRemoteShutdown;
     patchtable_t NoForegroundQuery;
-
-    namespace SpoofLockscreen_v
-    {
-        pkhc_offset_t getforeground_offset  = 0x0;
-    }
+    patchtable_t SpoofLockscreen;
 
     namespace ExitHC_v
     {

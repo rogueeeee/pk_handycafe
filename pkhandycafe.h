@@ -213,7 +213,8 @@ namespace features
         void nobrowseronlogin(FeatureMethod fm);
         void noremoteshutdown(FeatureMethod fm);
         void exithc(FeatureMethod fm);
-        void noserverforegroundinfo(FeatureMethod fm);
+        void noforegroundquery(FeatureMethod fm);
+        void spooflockscreen(FeatureMethod fm);
     }
 }
 
@@ -236,12 +237,13 @@ namespace pkhc
     }
 
     // Function pointer to proper feature function
-    FeatureFn FeatureFn_nolockscreen           = FeatureFn_default;
-    FeatureFn FeatureFn_noprocclear            = FeatureFn_default;
-    FeatureFn FeatureFn_nobrowseronlogin       = FeatureFn_default;
-    FeatureFn FeatureFn_noremoteshutdown       = FeatureFn_default;
-    FeatureFn FeatureFn_exithc                 = FeatureFn_default;
-    FeatureFn FeatureFn_noserverforegroundinfo = FeatureFn_default;
+    FeatureFn FeatureFn_nolockscreen      = FeatureFn_default;
+    FeatureFn FeatureFn_noprocclear       = FeatureFn_default;
+    FeatureFn FeatureFn_nobrowseronlogin  = FeatureFn_default;
+    FeatureFn FeatureFn_noremoteshutdown  = FeatureFn_default;
+    FeatureFn FeatureFn_exithc            = FeatureFn_default;
+    FeatureFn FeatureFn_noforegroundquery = FeatureFn_default;
+    FeatureFn FeatureFn_spooflockscreen   = FeatureFn_deafult;
 }
 
 namespace utils
