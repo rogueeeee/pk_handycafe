@@ -83,6 +83,10 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ui::handle::btn_Feature_NoForegroundQuery_Enable  = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 219, 60,  20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Enable,  NULL, NULL);
             ui::handle::btn_Feature_NoForegroundQuery_Disable = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  219, 60,  20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Disable, NULL, NULL);
 
+            // Spoof lockscreen
+            ui::handle::btn_Feature_SpoofLockscreen_Enable    = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 242, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Enable,  NULL, NULL);
+            ui::handle::btn_Feature_SpoofLockscreen_Disable   = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  242, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Disable, NULL, NULL);
+
             break;
         }
 
@@ -145,6 +149,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             TextOutA(hdc, 10, 176, "No Remote shutdown:", 19);
             TextOutA(hdc, 10, 198, "Exit handycafe:", 15);
             TextOutA(hdc, 10, 220, "No foreground query:", 20);
+            TextOutA(hdc, 10, 242, "Spoof Lockscreen:", 17);
 
             EndPaint(hWnd, &ps);
             break;

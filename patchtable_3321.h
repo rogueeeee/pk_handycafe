@@ -58,6 +58,8 @@ namespace patchtable_3321
         2
     };
 
+    
+
     namespace SpoofLockscreen_v
     {
         pkhc_offset_t getforeground_offset  = 0x9F693;

@@ -54,7 +54,7 @@ typedef void(*FeatureFn)(FeatureMethod);
 #define WND_CLASSNAME "handycafee"
 #define WND_TITLE "HandyCafe Client"
 #define WND_WIDTH 360
-#define WND_HEIGHT 300
+#define WND_HEIGHT 326
 
 #ifndef PKHC_DISABLE_SUPPORT_NEW
     #define PKHC_ISNEW_SUPPORTED "Yes"
@@ -94,6 +94,9 @@ namespace ui
 
         HWND btn_Feature_NoForegroundQuery_Enable  = nullptr;
         HWND btn_Feature_NoForegroundQuery_Disable = nullptr;
+
+        HWND btn_Feature_SpoofLockscreen_Enable    = nullptr;
+        HWND btn_Feature_SpoofLockscreen_Disable   = nullptr;
     }
 
     #define PK_CTRL_ID(name, value) const HMENU name = reinterpret_cast<HMENU>(value)
@@ -120,13 +123,16 @@ namespace ui
 
         PK_CTRL_ID(btn_Feature_NoForegroundQuery_Enable,  13);
         PK_CTRL_ID(btn_Feature_NoForegroundQuery_Disable, 14);
+
+        PK_CTRL_ID(btn_Feature_SpoofLockscreen_Enable,  15);
+        PK_CTRL_ID(btn_Feature_SpoofLockscreen_Disable, 16);
     }
     #undef PK_CTRL_ID
 
     namespace status
     {
-        char str[51] = "Idle...";
-        unsigned long long len = sizeof("Idle...");
+        char str[51] = "Ready...";
+        unsigned long long len = sizeof("Ready...");
 
         void set(const char* text)
         {
