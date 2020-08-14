@@ -2,7 +2,6 @@
 #define ___INCGUARD_PKHANDYCAFE_
 
 //#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
-//#define PKHC_DISABLE_AUTHENTICATION_BYPASS // Define flag for disabling the authentication bypass feature
 #undef UNICODE // band aid fix for mingw issues
 
 #include <Windows.h>
@@ -17,12 +16,6 @@
 #include "patchtable_4116.h"
 #else
 #include "patchtable_4116_dummy.h"
-#endif
-
-#ifndef PKHC_DISABLE_AUTHENTICATION_BYPASS
-#include "patchtable_noauth.h"
-#else
-#include "patchtable_noauth_dummy.h"
 #endif
 
 #define _PKHC_OPCODE_NOP 0x90 // Opcode for the NOP instruction
@@ -243,7 +236,7 @@ namespace pkhc
     FeatureFn FeatureFn_noremoteshutdown  = FeatureFn_default;
     FeatureFn FeatureFn_exithc            = FeatureFn_default;
     FeatureFn FeatureFn_noforegroundquery = FeatureFn_default;
-    FeatureFn FeatureFn_spooflockscreen   = FeatureFn_deafult;
+    FeatureFn FeatureFn_spooflockscreen   = FeatureFn_default;
 }
 
 namespace utils

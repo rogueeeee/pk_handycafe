@@ -124,6 +124,8 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 pkhc::FeatureFn_exithc(PKHC_ENABLE);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable) ) || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
                 pkhc::FeatureFn_noforegroundquery(flag);
+            else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable) ) || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
+                pkhc::FeatureFn_spooflockscreen(flag);
 
             break;
         }
@@ -266,7 +268,17 @@ namespace features
 
         void spooflockscreen(FeatureMethod fm)
         {
+            ui::status::set(fm ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
+            if ( !(fm ?
+                   utils::patch(&patchtable_3321::SpoofLockscreen) :
+                   utils::restore(&patchtable_3321::SpoofLockscreen)
+            )
+            ) {
+                ui::status::set(fm ? "Enabling lockscreen spoof failed..." : "Disabling lockscreen spoof failed...");
+                return;
+            }
 
+            ui::status::set(fm ? "Lockscreen spoof enabled" : "Lockscreen spoof disabled");
         }
     }
 }
