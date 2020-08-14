@@ -174,7 +174,7 @@ namespace features
 {
     namespace v3321
     {
-        void nolockscreen(FeatureMethod fm)
+        void NoLockscreen(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching lockscreen..." : "Restoring lockscreen...");
             if ( !(fm ?
@@ -189,7 +189,7 @@ namespace features
             ui::status::set(fm ? "No lockscreen enabled" : "No lockscreen disabled");
         }
 
-        void noprocclear(FeatureMethod fm)
+        void NoProcClear(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching proc clear..." : "Restoring proc clear...");
             if ( !(fm ?
@@ -204,7 +204,7 @@ namespace features
             ui::status::set(fm ? "No proc clear enabled" : "No proc clear disabled");
         }
 
-        void nobrowseronlogin(FeatureMethod fm)
+        void NoBrowserOnLogin(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching browser on login..." : "Restoring browser on login...");
             if ( !(fm ?
@@ -219,7 +219,7 @@ namespace features
             ui::status::set(fm ? "No browser on login enabled" : "No browser on login disabled");
         }
 
-        void noremoteshutdown(FeatureMethod fm)
+        void NoRemoteShutdown(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching remote shutdown..." : "Restoring remote shutdown...");
             if ( !(fm ?
@@ -234,7 +234,7 @@ namespace features
             ui::status::set(fm ? "No remote shutdown enabled" : "No remote shutdown disabled");
         }
 
-        void exithc(FeatureMethod fm)
+        void ExitHC(FeatureMethod fm)
         {
             ui::status::set("Executing exit thread...");
 
@@ -251,7 +251,7 @@ namespace features
             ui::status::set("Exit thread created!");
         }
 
-        void noforegroundquery(FeatureMethod fm)
+        void NoForegroundQuery(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching foreground query..." : "Restoring foreground query...");
             if ( !(fm ?
@@ -266,7 +266,7 @@ namespace features
             ui::status::set(fm ? "No foreground query enabled" : "No foreground query disabled");
         }
 
-        void spooflockscreen(FeatureMethod fm)
+        void SpoofLockscreen(FeatureMethod fm)
         {
             ui::status::set(fm ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
             if ( !(fm ?
@@ -490,13 +490,13 @@ namespace pkhc
             {
                 // Version 3.3.21
                 handycafe::ver = HC_VER_3_3_21;
-                pkhc::FeatureFn_nolockscreen      = features::v3321::nolockscreen;
-                pkhc::FeatureFn_noprocclear       = features::v3321::noprocclear;
-                pkhc::FeatureFn_nobrowseronlogin  = features::v3321::nobrowseronlogin;
-                pkhc::FeatureFn_noremoteshutdown  = features::v3321::noremoteshutdown;
-                pkhc::FeatureFn_exithc            = features::v3321::exithc;
-                pkhc::FeatureFn_noforegroundquery = features::v3321::noforegroundquery;
-                pkhc::FeatureFn_spooflockscreen   = features::v3321::spooflockscreen;
+                pkhc::FeatureFn_nolockscreen      = features::v3321::NoLockscreen;
+                pkhc::FeatureFn_noprocclear       = features::v3321::NoProcClear;
+                pkhc::FeatureFn_nobrowseronlogin  = features::v3321::NoBrowserOnLogin;
+                pkhc::FeatureFn_noremoteshutdown  = features::v3321::NoRemoteShutdown;
+                pkhc::FeatureFn_exithc            = features::v3321::ExitHC;
+                pkhc::FeatureFn_noforegroundquery = features::v3321::NoForegroundQuery;
+                pkhc::FeatureFn_spooflockscreen   = features::v3321::SpoofLockscreen;
             }
         }
         else

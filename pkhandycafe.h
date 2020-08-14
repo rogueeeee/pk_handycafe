@@ -201,13 +201,13 @@ namespace features
 {
     namespace v3321
     {
-        void nolockscreen(FeatureMethod fm);
-        void noprocclear(FeatureMethod fm);
-        void nobrowseronlogin(FeatureMethod fm);
-        void noremoteshutdown(FeatureMethod fm);
-        void exithc(FeatureMethod fm);
-        void noforegroundquery(FeatureMethod fm);
-        void spooflockscreen(FeatureMethod fm);
+        void NoLockscreen(FeatureMethod fm);
+        void NoProcClear(FeatureMethod fm);
+        void NoBrowserOnLogin(FeatureMethod fm);
+        void NoRemoteShutdown(FeatureMethod fm);
+        void ExitHC(FeatureMethod fm);
+        void NoForegroundQuery(FeatureMethod fm);
+        void SpoofLockscreen(FeatureMethod fm);
     }
 }
 
