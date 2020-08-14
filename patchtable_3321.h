@@ -92,12 +92,13 @@ namespace patchtable_3321
         &patchtable_3321::__SpoofLockscreen_next_alertserver
     };
 
-    //namespace NoAuthentication_v
-    //{
-        //pkhc_byte_t   bytecode_original[]   = { 0x74, 0x14 };
-        //pkhc_offset_t offset                = 0x156774;
-        //pkhc_size_t   size                  = sizeof(bytecode_original);
-    //}
+    patchtable_t NoAuthentication =
+    {
+        "\x74\x14",
+        nullptr,
+        0x156774,
+        2
+    };
 
     namespace ExitHC_v
     {

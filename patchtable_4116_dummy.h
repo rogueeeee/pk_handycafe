@@ -13,6 +13,7 @@ namespace patchtable_4116
     patchtable_t NoRemoteShutdown;
     patchtable_t NoForegroundQuery;
     patchtable_t SpoofLockscreen;
+    patchtable_t NoAuthentication;
 
     namespace ExitHC_v
     {
