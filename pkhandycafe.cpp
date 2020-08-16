@@ -328,6 +328,7 @@ namespace pkhc
         pkhc::FeatureFn_NoForegroundQuery = FeatureFn_Default;
         pkhc::FeatureFn_ExitHC            = FeatureFn_Default;
         pkhc::FeatureFn_SpoofLockscreen   = FeatureFn_Default;
+        pkhc::FeatureFn_NoAuthentication  = FeatureFn_Default;
 
         // Reset procedure: handle
         CloseHandle(handycafe::handle);
