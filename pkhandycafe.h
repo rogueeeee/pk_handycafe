@@ -90,6 +90,9 @@ namespace ui
 
         HWND btn_Feature_SpoofLockscreen_Enable    = nullptr;
         HWND btn_Feature_SpoofLockscreen_Disable   = nullptr;
+
+        HWND btn_Feature_NoAuthentication_Enable   = nullptr;
+        HWND btn_Feature_NoAuthentication_Disable  = nullptr;
     }
 
     #define PK_CTRL_ID(name, value) const HMENU name = reinterpret_cast<HMENU>(value)
@@ -119,6 +122,9 @@ namespace ui
 
         PK_CTRL_ID(btn_Feature_SpoofLockscreen_Enable,  15);
         PK_CTRL_ID(btn_Feature_SpoofLockscreen_Disable, 16);
+
+        PK_CTRL_ID(btn_Feature_NoAuthentication_Enable, 17);
+        PK_CTRL_ID(btn_Feature_NoAuthentication_Disable, 18);
     }
     #undef PK_CTRL_ID
 
@@ -208,6 +214,7 @@ namespace features
         void ExitHC(FeatureMethod fm);
         void NoForegroundQuery(FeatureMethod fm);
         void SpoofLockscreen(FeatureMethod fm);
+        void NoAuthentication(FeatureMethod fm);
     }
 }
 
@@ -230,13 +237,14 @@ namespace pkhc
     }
 
     // Function pointer to proper feature function
-    FeatureFn FeatureFn_nolockscreen      = FeatureFn_default;
-    FeatureFn FeatureFn_noprocclear       = FeatureFn_default;
-    FeatureFn FeatureFn_nobrowseronlogin  = FeatureFn_default;
-    FeatureFn FeatureFn_noremoteshutdown  = FeatureFn_default;
-    FeatureFn FeatureFn_exithc            = FeatureFn_default;
-    FeatureFn FeatureFn_noforegroundquery = FeatureFn_default;
-    FeatureFn FeatureFn_spooflockscreen   = FeatureFn_default;
+    FeatureFn FeatureFn_NoLockscreen      = FeatureFn_default;
+    FeatureFn FeatureFn_NoProcClear       = FeatureFn_default;
+    FeatureFn FeatureFn_NoBrowserOnLogin  = FeatureFn_default;
+    FeatureFn FeatureFn_NoRemoteShutdown  = FeatureFn_default;
+    FeatureFn FeatureFn_ExitHC            = FeatureFn_default;
+    FeatureFn FeatureFn_NoForegroundQuery = FeatureFn_default;
+    FeatureFn FeatureFn_SpoofLockscreen   = FeatureFn_default;
+    FeatureFn FeatureFn_NoAuthentication  = FeatureFn_default;
 }
 
 namespace utils

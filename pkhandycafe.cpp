@@ -113,19 +113,19 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
             }
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoLockscreen_Enable) ) || ctrl_id == ui::id::btn_Feature_NoLockscreen_Disable)
-                pkhc::FeatureFn_nolockscreen(flag);
+                pkhc::FeatureFn_NoLockscreen(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoProcClear_Enable) ) || ctrl_id == ui::id::btn_Feature_NoProcClear_Disable)
-                pkhc::FeatureFn_noprocclear(flag);
+                pkhc::FeatureFn_NoProcClear(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Enable) ) || ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Disable)
-                pkhc::FeatureFn_nobrowseronlogin(flag);
+                pkhc::FeatureFn_NoBrowserOnLogin(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Enable) ) || ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Disable)
-                pkhc::FeatureFn_noremoteshutdown(flag);
+                pkhc::FeatureFn_NoRemoteShutdown(flag);
             else if (ctrl_id == ui::id::btn_Feature_ExitHC)
-                pkhc::FeatureFn_exithc(PKHC_ENABLE);
+                pkhc::FeatureFn_ExitHC(PKHC_ENABLE);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable) ) || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
-                pkhc::FeatureFn_noforegroundquery(flag);
+                pkhc::FeatureFn_NoForegroundQuery(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable) ) || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
-                pkhc::FeatureFn_spooflockscreen(flag);
+                pkhc::FeatureFn_SpoofLockscreen(flag);
 
             break;
         }
@@ -296,13 +296,13 @@ namespace pkhc
         handycafe::ver_a = handycafe::ver_b = handycafe::ver_c = 0;
 
         // Reset procedure: features
-        pkhc::FeatureFn_nolockscreen      = FeatureFn_default;
-        pkhc::FeatureFn_noprocclear       = FeatureFn_default;
-        pkhc::FeatureFn_nobrowseronlogin  = FeatureFn_default;
-        pkhc::FeatureFn_noremoteshutdown  = FeatureFn_default;
-        pkhc::FeatureFn_noforegroundquery = FeatureFn_default;
-        pkhc::FeatureFn_exithc            = FeatureFn_default;
-        pkhc::FeatureFn_spooflockscreen   = FeatureFn_default;
+        pkhc::FeatureFn_NoLockscreen      = FeatureFn_default;
+        pkhc::FeatureFn_NoProcClear       = FeatureFn_default;
+        pkhc::FeatureFn_NoBrowserOnLogin  = FeatureFn_default;
+        pkhc::FeatureFn_NoRemoteShutdown  = FeatureFn_default;
+        pkhc::FeatureFn_NoForegroundQuery = FeatureFn_default;
+        pkhc::FeatureFn_ExitHC            = FeatureFn_default;
+        pkhc::FeatureFn_SpoofLockscreen   = FeatureFn_default;
 
         // Reset procedure: handle
         CloseHandle(handycafe::handle);
@@ -477,39 +477,39 @@ namespace pkhc
                 
                 #ifndef PKHC_DISABLE_SUPPORT_NEW
                 #elif
-                pkhc::FeatureFn_nolockscreen      = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_noprocclear       = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_nobrowseronlogin  = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_noremoteshutdown  = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_exithc            = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_noforegroundquery = pkhc::FeatureFn_notsupported;
-                pkhc::FeatureFn_spooflockscreen   = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_NoBrowserOnLogin  = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_notsupported;
+                pkhc::FeatureFn_SpoofLockscreen   = pkhc::FeatureFn_notsupported;
                 #endif
             }
             else
             {
                 // Version 3.3.21
                 handycafe::ver = HC_VER_3_3_21;
-                pkhc::FeatureFn_nolockscreen      = features::v3321::NoLockscreen;
-                pkhc::FeatureFn_noprocclear       = features::v3321::NoProcClear;
-                pkhc::FeatureFn_nobrowseronlogin  = features::v3321::NoBrowserOnLogin;
-                pkhc::FeatureFn_noremoteshutdown  = features::v3321::NoRemoteShutdown;
-                pkhc::FeatureFn_exithc            = features::v3321::ExitHC;
-                pkhc::FeatureFn_noforegroundquery = features::v3321::NoForegroundQuery;
-                pkhc::FeatureFn_spooflockscreen   = features::v3321::SpoofLockscreen;
+                pkhc::FeatureFn_NoLockscreen      = features::v3321::NoLockscreen;
+                pkhc::FeatureFn_NoProcClear       = features::v3321::NoProcClear;
+                pkhc::FeatureFn_NoBrowserOnLogin  = features::v3321::NoBrowserOnLogin;
+                pkhc::FeatureFn_NoRemoteShutdown  = features::v3321::NoRemoteShutdown;
+                pkhc::FeatureFn_ExitHC            = features::v3321::ExitHC;
+                pkhc::FeatureFn_NoForegroundQuery = features::v3321::NoForegroundQuery;
+                pkhc::FeatureFn_SpoofLockscreen   = features::v3321::SpoofLockscreen;
             }
         }
         else
         {
             // Version is unsupported
             handycafe::ver = HC_VER_UNSUPPORTED;
-            pkhc::FeatureFn_nolockscreen      = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noprocclear       = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_nobrowseronlogin  = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noremoteshutdown  = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_exithc            = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_noforegroundquery = pkhc::FeatureFn_notsupported;
-            pkhc::FeatureFn_spooflockscreen   = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_NoBrowserOnLogin  = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_notsupported;
+            pkhc::FeatureFn_SpoofLockscreen   = pkhc::FeatureFn_notsupported;
         }
 
 
@@ -532,19 +532,23 @@ namespace pkhc
             return;
         }
 
-        char msgbuffer[128] = { '\0' };
+        char msgbuffer[256] = { '\0' };
 
         sprintf(msgbuffer, 
                 "No lockscreen: %s\r\n"
                 "No Process clear: %s\r\n"
                 "No browser on login: %s\r\n"
                 "No remote shutdown: %s\r\n"
-                "No foreground query:%s\r\n",
+                "No foreground query:%s\r\n"
+                "Spoof Lockscreen: %s\r\n"
+                "No Authentioation: %s",
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery)
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication)
         );
 
         MessageBoxA(ui::handle::frm_Main, msgbuffer, "Assembly check", 0);

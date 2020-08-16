@@ -18,6 +18,23 @@ struct patchtable_t
     pkhc_offset_t offset   = 0;       // Offset from base
     pkhc_size_t   size     = 0;       // Size of byte array
     patchtable_t* next     = nullptr; // Pointer to the next patchtable
+
+    constexpr pkhc_size_t size_auto()
+    {
+        if (!byte_old)
+            return 0;
+
+        pkhc_byte_t data = byte_old;
+        pkhc_size_t sz   = 0;
+
+        while (*data)
+        {
+            data++;
+            sz++;
+        }
+
+        return sz - 1;
+    }
 };
 
 enum HCASMSTATUS : unsigned char
