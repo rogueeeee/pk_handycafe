@@ -11,6 +11,7 @@ namespace patchtable_3321
 
     patchtable_t NoLockScreen =
     {
+        "nls",
         "\x8B\xEC",
         "\x5D\xC3",
         0x125761,
@@ -20,6 +21,7 @@ namespace patchtable_3321
 
     patchtable_t __NoLockScreen_next_desktop =
     {
+        "nls_2",
         NoLockScreen.byte_old,
         NoLockScreen.byte_new,
         0x158081,
@@ -28,6 +30,7 @@ namespace patchtable_3321
 
     patchtable_t NoProcClear =
     {
+        "npc",
         "\x75\x08",
         "\xEB\x77",
         0x11DDEB,
@@ -36,6 +39,7 @@ namespace patchtable_3321
 
     patchtable_t NoBrowserOnLogin
     {
+        "nbol",
         "\x50\x68\x74\xE7\x56\x00\x6A\x00\xE8\x66\x8E\xEE\xFF",
         nullptr,
         0x16E5B5,
@@ -44,6 +48,7 @@ namespace patchtable_3321
 
     patchtable_t NoRemoteShutdown =
     {
+        "nrs",
         "\x8B\xF2",
         "\xEB\x7F",
         0x123A59,
@@ -52,6 +57,7 @@ namespace patchtable_3321
 
     patchtable_t NoForegroundQuery =
     {
+        "nfq",
         "\x8B\xD8",
         "\x33\xC0",
         0x127C1A,
@@ -60,13 +66,16 @@ namespace patchtable_3321
 
     patchtable_t __SpoofLockscreen_next_adminalertserver =
     {
+        "sl_4",
         "\xE8\xC8\xE4\xFF\xFF",
         nullptr,
         0x128FE3,
+        5
     };
 
     patchtable_t __SpoofLockscreen_next_servercheckjump =
     {
+        "sl_3",
         "\xEB\x5D",
         nullptr,
         0x156788,
@@ -76,6 +85,7 @@ namespace patchtable_3321
 
     patchtable_t __SpoofLockscreen_next_alertserver =
     {
+        "sl_2",
         "\xE8\x41\x28\xFD\xFF",
         nullptr,
         0x1567E2,
@@ -85,6 +95,7 @@ namespace patchtable_3321
 
     patchtable_t SpoofLockscreen =
     {
+        "sl",
         "\xFF\x53\x38",
         nullptr,
         0x9F693,
@@ -94,6 +105,7 @@ namespace patchtable_3321
 
     patchtable_t NoAuthentication =
     {
+        "na",
         "\x74\x14",
         nullptr,
         0x156774,

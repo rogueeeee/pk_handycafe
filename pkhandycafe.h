@@ -47,7 +47,7 @@ typedef void(*FeatureFn)(FeatureMethod);
 #define WND_CLASSNAME "handycafee"
 #define WND_TITLE "HandyCafe Client"
 #define WND_WIDTH 360
-#define WND_HEIGHT 326
+#define WND_HEIGHT 340
 
 #ifndef PKHC_DISABLE_SUPPORT_NEW
     #define PKHC_ISNEW_SUPPORTED "Yes"
@@ -226,31 +226,31 @@ namespace pkhc
     void CheckAssembly();
 
     // Uncategorized Feature functions
-    void FeatureFn_default(FeatureMethod fm)
+    void FeatureFn_Default(FeatureMethod fm)
     {
         ui::status::set("Initialization required");
     }
 
-    void FeatureFn_notsupported(FeatureMethod fm)
+    void FeatureFn_NotSupported(FeatureMethod fm)
     {
         ui::status::set("Feature not supported");
     }
 
     // Function pointer to proper feature function
-    FeatureFn FeatureFn_NoLockscreen      = FeatureFn_default;
-    FeatureFn FeatureFn_NoProcClear       = FeatureFn_default;
-    FeatureFn FeatureFn_NoBrowserOnLogin  = FeatureFn_default;
-    FeatureFn FeatureFn_NoRemoteShutdown  = FeatureFn_default;
-    FeatureFn FeatureFn_ExitHC            = FeatureFn_default;
-    FeatureFn FeatureFn_NoForegroundQuery = FeatureFn_default;
-    FeatureFn FeatureFn_SpoofLockscreen   = FeatureFn_default;
-    FeatureFn FeatureFn_NoAuthentication  = FeatureFn_default;
+    FeatureFn FeatureFn_NoLockscreen      = FeatureFn_Default;
+    FeatureFn FeatureFn_NoProcClear       = FeatureFn_Default;
+    FeatureFn FeatureFn_NoBrowserOnLogin  = FeatureFn_Default;
+    FeatureFn FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
+    FeatureFn FeatureFn_ExitHC            = FeatureFn_Default;
+    FeatureFn FeatureFn_NoForegroundQuery = FeatureFn_Default;
+    FeatureFn FeatureFn_SpoofLockscreen   = FeatureFn_Default;
+    FeatureFn FeatureFn_NoAuthentication  = FeatureFn_Default;
 }
 
 namespace utils
 {
-    bool patch(patchtable_t* pt);
-    bool restore(patchtable_t* pt);
+    bool Patch(patchtable_t* pt);
+    bool Restore(patchtable_t* pt);
     const char* GetASMStatus(patchtable_t* pt, HCASMSTATUS* out_status);
 }
 

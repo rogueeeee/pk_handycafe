@@ -13,6 +13,7 @@ typedef unsigned long long pkhc_size_t;
 
 struct patchtable_t
 {
+    const char*   id       = "?";     // CSTR ID
     pkhc_byte_t   byte_old = nullptr; // Original byte array 
     pkhc_byte_t   byte_new = nullptr; // Patched byte array
     pkhc_offset_t offset   = 0;       // Offset from base
