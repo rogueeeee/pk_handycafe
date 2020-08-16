@@ -542,15 +542,136 @@ namespace pkhc
                 "No foreground query:%s\r\n"
                 "Spoof Lockscreen: %s\r\n"
                 "No Authentioation: %s",
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication)
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen,      nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear,       nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin,  nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown,  nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen,   nullptr),
+                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication,  nullptr)
         );
 
         MessageBoxA(ui::handle::frm_Main, msgbuffer, "Assembly check", 0);
+    }
+}
+
+namespace utils
+{
+    // Patches a section of memory
+    bool patch(patchtable_t* pt)
+    {
+        if (!pt)
+            return false;
+
+        do
+        {
+            DWORD oldProtect = 0; // Stores the old protection flag of the memory section
+            unsigned char  singlebyte = _PKHC_OPCODE_NOP; // Used if allocation for the NOP patching is unecessary
+            unsigned char* bytearray  = nullptr; // Pointer to the bytearray
+
+            // New byte array patching
+            if (pt->byte_new)
+            {
+                bytearray = (unsigned char*)(pt->byte_new);
+            }
+            // NOP patching
+            else
+            {
+                bytearray = pt->size > 1 ? new unsigned char[pt->size] : &singlebyte; // Only allocate when necessary
+                memset(bytearray, _PKHC_OPCODE_NOP, pt->size); // Fill the array with the NOP instruction
+            }
+
+            // Unlock, patch, then restore the memory section
+            if (!VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, PAGE_READWRITE, &oldProtect)
+            ||  !WriteProcessMemory(handycafe::handle, handycafe::base + pt->offset, bytearray, pt->size, NULL)
+            ||  !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
+            ) {
+                if (!pt->byte_new)
+                    delete[] bytearray;
+
+                return false;
+            }
+
+            // Free the memory
+            if (!pt->byte_new)
+                delete[] bytearray;
+
+        } while (pt = pt->next); // Load the next patch table
+
+        return true;
+    }
+
+    // Restores the original bytes in a section of a patched memory
+    bool restore(patchtable_t* pt)
+    {
+        if (!pt)
+            return false;
+
+        do
+        {
+            DWORD oldProtect = 0; // Stores the old protection flag of the memory section
+    
+            // Patch and restore the original bytes
+            if (!VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, PAGE_READWRITE, &oldProtect)
+            ||  !WriteProcessMemory(handycafe::handle, handycafe::base + pt->offset, pt->byte_old, pt->size, NULL)
+            ||  !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
+            ) {
+                return false;
+            }
+
+        } while (pt = pt->next); // Load the next patchtable
+
+        return true;
+    }
+
+    // Compares a section of memory to the provided bytecode for difference
+    const char* GetASMStatus(patchtable_t* pt, HCASMSTATUS* out_status)
+    {
+        // helper function for comparing bytes
+        static bool(*comparebytes)(unsigned char* a, pkhc_byte_t b, pkhc_size_t size) = [] (unsigned char* a, pkhc_byte_t b, pkhc_size_t size) -> bool
+        {
+            for (int idx = 0; idx < size; idx++)
+            {
+                if (a[idx] != (b != nullptr ? static_cast<unsigned char>(b[idx]) : _PKHC_OPCODE_NOP))
+                    return false;
+            }
+
+            return true;
+        };
+
+        DWORD          oldProtect = 0; // Stores the old protection flag of the memory section
+        unsigned char  singlebyte = 0x0; // Used if allocation is unecessary
+        unsigned char* readbuffer = pt->size > 1 ? new unsigned char[pt->size] : &singlebyte; // Points to the byte array for comparison
+        HCASMSTATUS    asmstat    = HC_ASM_INVALID; // Status of the assembly
+    
+        if (!readbuffer)
+            return nullptr;
+    
+        // Unlocks the memory, reads it into a buffer, then restores its original protection flag
+        if (!VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, PAGE_READWRITE, &oldProtect)
+        ||  !ReadProcessMemory(handycafe::handle, handycafe::base + pt->offset, readbuffer, pt->size, NULL)
+        ||  !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
+        ) {
+            delete[] readbuffer;
+            return nullptr;
+        }
+    
+        // Check for patch bytes
+        if (comparebytes(readbuffer, pt->byte_new, pt->size))
+            asmstat = HC_ASM_PATCHED;
+        // Check if bytes are unmodified
+        else if (comparebytes(readbuffer, pt->byte_old, pt->size))
+            asmstat = HC_ASM_ORIGIN;
+        // If neither, by default the byte array is invalid.
+    
+        // Return the asm status through the out_status pointer if available
+        if (out_status)
+            *out_status = asmstat;
+
+        // Delete the buffer
+        delete[] readbuffer;
+
+        // Return the status
+        return hcasm_to_text[asmstat];
     }
 }
