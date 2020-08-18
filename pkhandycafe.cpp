@@ -116,6 +116,8 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     ShellExecuteA(NULL, "open", "https://github.com/rogueeeee/pk_handycafe", NULL, NULL, SW_SHOWNORMAL);
                 }
             }
+            else if (ctrl_id == ui::id::btn_Feature_ExitHC)
+                pkhc::FeatureFn_ExitHC(PKHC_ENABLE);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoLockscreen_Enable) ) || ctrl_id == ui::id::btn_Feature_NoLockscreen_Disable)
                 pkhc::FeatureFn_NoLockscreen(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoProcClear_Enable) ) || ctrl_id == ui::id::btn_Feature_NoProcClear_Disable)
@@ -124,8 +126,6 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 pkhc::FeatureFn_NoBrowserOnLogin(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Enable) ) || ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Disable)
                 pkhc::FeatureFn_NoRemoteShutdown(flag);
-            else if (ctrl_id == ui::id::btn_Feature_ExitHC)
-                pkhc::FeatureFn_ExitHC(PKHC_ENABLE);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable) ) || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
                 pkhc::FeatureFn_NoForegroundQuery(flag);
             else if ( ( flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable) ) || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
