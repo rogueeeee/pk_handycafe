@@ -70,7 +70,8 @@ namespace patchtable_3321
         "\xE8\xC8\xE4\xFF\xFF",
         nullptr,
         0x128FE3,
-        5
+        5,
+        &patchtable_3321::__NoLockScreen_next_desktop
     };
 
     patchtable_t __SpoofLockscreen_next_servercheckjump =

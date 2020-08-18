@@ -38,6 +38,21 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     ShowWindow(ui::handle::frm_Main, nCmdShow);
     UpdateWindow(ui::handle::frm_Main);
 
+    // Key listener thread for spoof lockscreen event
+    std::thread SpoofLockscreenKeyListener([]() ->  void
+    {
+        while (true)
+        {
+            if (!pkhc::bSpoofLockscreenPatched)
+            {
+                Sleep(1500);
+                continue;
+            }
+
+            Sleep(1);
+        }
+    }, 0);
+
     // Message handling
     MSG msg = {};
     while(GetMessage(&msg, NULL, 0, 0) > 0)
@@ -177,6 +192,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
+// Function callbacks
 namespace features
 {
     namespace v3321
@@ -275,9 +291,6 @@ namespace features
 
         void SpoofLockscreen(FeatureMethod fm)
         {
-            // TODO: Delay / on key patch of get foreground opcode
-            // TODO: on key hide lockscreen window
-
             ui::status::set(fm ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
             if ( !(fm ?
                    utils::Patch(&patchtable_3321::SpoofLockscreen) :
@@ -288,6 +301,7 @@ namespace features
                 return;
             }
 
+            pkhc::bSpoofLockscreenPatched = fm;
             ui::status::set(fm ? "Lockscreen spoof enabled" : "Lockscreen spoof disabled");
         }
 

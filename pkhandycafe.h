@@ -1,6 +1,8 @@
 #ifndef ___INCGUARD_PKHANDYCAFE_
 #define ___INCGUARD_PKHANDYCAFE_
 
+// TODO: prevent hc from hiding other windows
+
 //#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
 #undef UNICODE // band aid fix for mingw issues
 
@@ -8,6 +10,7 @@
 #include <TlHelp32.h>
 #include <Psapi.h>
 #include <stdio.h>
+#include <thread>
 #include "hash.h"
 
 #include "patchtable_3321.h"
@@ -19,7 +22,9 @@
 #endif
 
 #define _PKHC_OPCODE_NOP 0x90 // Opcode for the NOP instruction
-typedef unsigned char* ptr_t;     // Pointer type
+#define _PKHC_SL_VK_PATCH VK_INSERT // Key to listen for executing the spoof lockscreen event
+
+typedef unsigned char* ptr_t; // Pointer type
 
 enum FeatureMethod : bool
 {
@@ -200,6 +205,16 @@ namespace handycafe
 
         InvalidateRect(ui::handle::frm_Main, NULL, true);
     }
+
+    namespace lockscreen
+    {
+        constexpr FNV64  wndTitle    = utils::hashfnv("HandyCafe Client");
+        constexpr size_t wndTitlelen = sizeof("HandyCafe Client") - 1;
+
+        constexpr FNV64  wndClass    = utils::hashfnv("TfrmWait");
+        constexpr size_t wndClassLen = sizeof("TfrmWait") - 1;
+    }
+
 }
 
 // Namespace for pkhc's features
@@ -221,6 +236,8 @@ namespace features
 // Namespace for pkhc
 namespace pkhc
 {
+    bool bSpoofLockscreenPatched = false; // Boolean to track if spoof lockscreen is active
+
     // Function prototypes for the main definitions of pkhc related features
     void Initialize();
     void CheckAssembly();
