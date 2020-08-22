@@ -63,6 +63,33 @@ namespace patchtable_3321
         0x127C1A,
         2
     };
+#ifndef PKHC_SPOOF_LAZY
+    patchtable_t __SpoofLockscreen_next_setupdesktop =
+    {
+        "sl_7",
+        "\xE8\xFB\x31\xFF\xFF",
+        nullptr,
+        0x164E80
+    };
+
+    patchtable_t __SpoofLockscreen_next_hidetaskbar =
+    {
+        "sl_6",
+        "\xE8\x7D\x2B\xEE\xFF",
+        nullptr,
+        0x1257C6,
+        5
+    };
+
+    patchtable_t __SpoofLockscreen_next_hidesidepanel =
+    {
+        "sl_5",
+        "\xE8\x93\x2B\xEE\xFF",
+        nullptr,
+        0x1257B0,
+        5,
+        &patchtable_3321::__SpoofLockscreen_next_hidetaskbar
+    };
 
     patchtable_t __SpoofLockscreen_next_adminalertserver =
     {
@@ -71,7 +98,7 @@ namespace patchtable_3321
         nullptr,
         0x128FE3,
         5,
-        &patchtable_3321::__NoLockScreen_next_desktop
+        &patchtable_3321::__SpoofLockscreen_next_hidesidepanel
     };
 
     patchtable_t __SpoofLockscreen_next_servercheckjump =
@@ -84,7 +111,7 @@ namespace patchtable_3321
         &patchtable_3321::__SpoofLockscreen_next_adminalertserver
     };
 
-    patchtable_t __SpoofLockscreen_next_alertserver =
+    patchtable_t SpoofLockscreen =
     {
         "sl_2",
         "\xE8\x41\x28\xFD\xFF",
@@ -94,16 +121,15 @@ namespace patchtable_3321
         &patchtable_3321::__SpoofLockscreen_next_servercheckjump
     };
 
-    patchtable_t SpoofLockscreen =
+    patchtable_t SpoofLockscreen_event_getforeground =
     {
         "sl",
         "\xFF\x53\x38",
         nullptr,
         0x9F693,
         3,
-        &patchtable_3321::__SpoofLockscreen_next_alertserver
     };
-
+#endif
     patchtable_t NoAuthentication =
     {
         "na",
@@ -115,7 +141,7 @@ namespace patchtable_3321
 
     namespace ExitHC_v
     {
-        pkhc_offset_t offset = 0x164EFC;
+        pkhc_offset_cx offset = 0x164EFC;
     }
 }
 #endif//___INCGUARD_PATCHTABLE_3321_

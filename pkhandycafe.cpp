@@ -38,10 +38,13 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
     ShowWindow(ui::handle::frm_Main, nCmdShow);
     UpdateWindow(ui::handle::frm_Main);
 
+#ifndef PKHC_SPOOF_LAZY
     // Key listener thread for spoof lockscreen event
     std::thread SpoofLockscreenKeyListener([]() ->  void
     {
-        while (true)
+        bool wasKeyDown     = false;
+        HWND hwndForeground = nullptr;
+        while (pkhc::bSpoofLockscreenThreadKeep)
         {
             if (!pkhc::bSpoofLockscreenPatched)
             {
@@ -50,8 +53,43 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
             }
 
             Sleep(1);
+
+            bool isKeyDown = GetAsyncKeyState(_PKHC_SL_VK_PATCH) & 0x1;
+
+            if (isKeyDown && !wasKeyDown)
+                wasKeyDown = true;
+
+            // Check if event should be triggered
+            if (!isKeyDown && wasKeyDown && (hwndForeground = GetForegroundWindow()) )
+            {
+                wasKeyDown = false; // Reset key listen
+
+                char buffTitle[32] = { '\0' };
+                char buffClass[32] = { '\0' };
+
+                // Obtain window info
+                if (!GetWindowTextA(hwndForeground, buffTitle, 32)
+                ||  !GetClassNameA(hwndForeground, buffClass, 32))
+                {
+                    continue;
+                }
+
+                // Compare window info
+                if (utils::hashfnv_partial(buffTitle, handycafe::lockscreen::wndTitleLen) != handycafe::lockscreen::wndTitle
+                ||  utils::hashfnv_partial(buffClass, handycafe::lockscreen::wndClassLen) != handycafe::lockscreen::wndClass)
+                {
+                    continue;
+                }
+
+                // Patch Lockscreen
+                utils::Patch(&patchtable_3321::SpoofLockscreen_event_getforeground);
+
+                // Hide the lockscreen
+                ShowWindow(hwndForeground, SW_HIDE);
+            }
         }
-    }, 0);
+    });
+#endif
 
     // Message handling
     MSG msg = {};
@@ -61,7 +99,11 @@ int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdL
         DispatchMessage(&msg);
     }
 
-    return (int) msg.wParam;
+#ifndef PKHC_SPOOF_LAZY
+    SpoofLockscreenKeyListener.join();
+#endif
+
+    return static_cast<int>(msg.wParam);
 }
 
 // Window procedure callback for the main UI
@@ -98,13 +140,13 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ui::handle::btn_Feature_NoForegroundQuery_Enable  = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 219, 60,  20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Enable,  NULL, NULL);
             ui::handle::btn_Feature_NoForegroundQuery_Disable = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  219, 60,  20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Disable, NULL, NULL);
 
-            // Spoof lockscreen
-            ui::handle::btn_Feature_SpoofLockscreen_Enable    = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 242, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Enable,  NULL, NULL);
-            ui::handle::btn_Feature_SpoofLockscreen_Disable   = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  242, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Disable, NULL, NULL);
-
             // No authentication
-            ui::handle::btn_Feature_NoAuthentication_Enable   = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 265, 60,  20, hWnd, ui::id::btn_Feature_NoAuthentication_Enable,  NULL, NULL);
-            ui::handle::btn_Feature_NoAuthentication_Disable  = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  265, 60,  20, hWnd, ui::id::btn_Feature_NoAuthentication_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoAuthentication_Enable   = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 242, 60,  20, hWnd, ui::id::btn_Feature_NoAuthentication_Enable,  NULL, NULL);
+            ui::handle::btn_Feature_NoAuthentication_Disable  = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  242, 60,  20, hWnd, ui::id::btn_Feature_NoAuthentication_Disable, NULL, NULL);
+
+            // Spoof lockscreen
+            ui::handle::btn_Feature_SpoofLockscreen_Enable    = CreateWindowExA(0, "button", "Enable",         WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 265, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Enable,  NULL, NULL);
+            ui::handle::btn_Feature_SpoofLockscreen_Disable   = CreateWindowExA(0, "button", "Disable",        WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80,  265, 60,  20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Disable, NULL, NULL);
 
             break;
         }
@@ -172,8 +214,8 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             TextOutA(hdc, 10, 176, "No Remote shutdown:", 19);
             TextOutA(hdc, 10, 198, "Exit handycafe:", 15);
             TextOutA(hdc, 10, 220, "No foreground query:", 20);
-            TextOutA(hdc, 10, 242, "Spoof lockscreen:", 17);
-            TextOutA(hdc, 10, 264, "No authentication:", 18);
+            TextOutA(hdc, 10, 242, "No authentication:", 18);
+            TextOutA(hdc, 10, 264, "Spoof lockscreen:", 17);
 
             EndPaint(hWnd, &ps);
             break;
@@ -183,6 +225,8 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             if (handycafe::handle)
                 CloseHandle(handycafe::handle);
+
+            pkhc::bSpoofLockscreenThreadKeep = false;
 
             PostQuitMessage(0);
             break;
@@ -261,7 +305,7 @@ namespace features
         {
             ui::status::set("Executing exit thread...");
 
-            HANDLE hCRT = CreateRemoteThread(handycafe::handle, nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(handycafe::base + patchtable_3321::ExitHC_v::offset), nullptr, NULL, nullptr);
+            HANDLE hCRT = CreateRemoteThread(handycafe::handle, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(handycafe::base + patchtable_3321::ExitHC_v::offset), nullptr, 0, nullptr);
             if (!hCRT)
             {
                 ui::status::set("Failed to create exit thread");
@@ -289,12 +333,13 @@ namespace features
             ui::status::set(fm ? "No foreground query enabled" : "No foreground query disabled");
         }
 
+        #ifndef PKHC_SPOOF_LAZY
         void SpoofLockscreen(FeatureMethod fm)
         {
             ui::status::set(fm ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
             if ( !(fm ?
-                   utils::Patch(&patchtable_3321::SpoofLockscreen) :
-                   utils::Restore(&patchtable_3321::SpoofLockscreen)
+                   utils::Patch(&patchtable_3321::SpoofLockscreen) : // Only patch the desktop setup, lockscreen spoof patch is applied on event
+                   utils::Restore(&patchtable_3321::SpoofLockscreen) && utils::Restore(&patchtable_3321::SpoofLockscreen_event_getforeground)
             )
             ) {
                 ui::status::set(fm ? "Enabling lockscreen spoof failed..." : "Disabling lockscreen spoof failed...");
@@ -304,6 +349,7 @@ namespace features
             pkhc::bSpoofLockscreenPatched = fm;
             ui::status::set(fm ? "Lockscreen spoof enabled" : "Lockscreen spoof disabled");
         }
+        #endif
 
         void NoAuthentication(FeatureMethod fm)
         {
@@ -537,9 +583,18 @@ namespace pkhc
                 pkhc::FeatureFn_NoRemoteShutdown  = features::v3321::NoRemoteShutdown;
                 pkhc::FeatureFn_ExitHC            = features::v3321::ExitHC;
                 pkhc::FeatureFn_NoForegroundQuery = features::v3321::NoForegroundQuery;
+                #ifndef PKHC_SPOOF_LAZY
                 pkhc::FeatureFn_SpoofLockscreen   = features::v3321::SpoofLockscreen;
+                #endif
                 pkhc::FeatureFn_NoAuthentication  = features::v3321::NoAuthentication;
             }
+
+            #ifdef PKHC_SPOOF_LAZY
+            pkhc::FeatureFn_SpoofLockscreen = [] (FeatureMethod fm) -> void
+            {
+                ui::status::set("Spoof lockscreen is disabled");
+            };
+            #endif
         }
         else
         {
@@ -583,14 +638,18 @@ namespace pkhc
                 "No browser on login: %s\r\n"
                 "No remote shutdown: %s\r\n"
                 "No foreground query:%s\r\n"
+                #ifndef PKHC_SPOOF_LAZY
                 "Spoof Lockscreen: %s\r\n"
+                #endif
                 "No Authentioation: %s",
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen,      nullptr),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear,       nullptr),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin,  nullptr),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown,  nullptr),
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
+                #ifndef PKHC_SPOOF_LAZY
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen,   nullptr),
+                #endif
                 utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication,  nullptr)
         );
 
@@ -632,7 +691,7 @@ namespace utils
                 if (!pt->byte_new)
                     delete[] bytearray;
 
-                MessageBoxA(ui::handle::frm_Main, pt->id, "Patch failed on id", NULL);
+                MessageBoxA(ui::handle::frm_Main, pt->id, "Patch failed on id", 0);
 
                 return false;
             }
@@ -661,7 +720,7 @@ namespace utils
             ||  !WriteProcessMemory(handycafe::handle, handycafe::base + pt->offset, pt->byte_old, pt->size, NULL)
             ||  !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
             ) {
-                MessageBoxA(ui::handle::frm_Main, pt->id, "Restore failed on id", NULL);
+                MessageBoxA(ui::handle::frm_Main, pt->id, "Restore failed on id", 0);
 
                 return false;
             }
@@ -701,7 +760,7 @@ namespace utils
         ) {
             delete[] readbuffer;
 
-            MessageBoxA(ui::handle::frm_Main, pt->id, "ASM check failed on id", NULL);
+            MessageBoxA(ui::handle::frm_Main, pt->id, "ASM check failed on id", 0);
 
             return nullptr;
         }

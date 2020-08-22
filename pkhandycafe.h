@@ -4,13 +4,16 @@
 // TODO: prevent hc from hiding other windows
 
 //#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
+#define PKHC_SPOOF_LAZY // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
 #undef UNICODE // band aid fix for mingw issues
 
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
 #include <stdio.h>
+#ifndef PKHC_SPOOF_LAZY
 #include <thread>
+#endif
 #include "hash.h"
 
 #include "patchtable_3321.h"
@@ -209,7 +212,7 @@ namespace handycafe
     namespace lockscreen
     {
         constexpr FNV64  wndTitle    = utils::hashfnv("HandyCafe Client");
-        constexpr size_t wndTitlelen = sizeof("HandyCafe Client") - 1;
+        constexpr size_t wndTitleLen = sizeof("HandyCafe Client") - 1;
 
         constexpr FNV64  wndClass    = utils::hashfnv("TfrmWait");
         constexpr size_t wndClassLen = sizeof("TfrmWait") - 1;
@@ -228,7 +231,9 @@ namespace features
         void NoRemoteShutdown(FeatureMethod fm);
         void ExitHC(FeatureMethod fm);
         void NoForegroundQuery(FeatureMethod fm);
+        #ifndef PKHC_SPOOF_LAZY
         void SpoofLockscreen(FeatureMethod fm);
+        #endif
         void NoAuthentication(FeatureMethod fm);
     }
 }
@@ -236,6 +241,7 @@ namespace features
 // Namespace for pkhc
 namespace pkhc
 {
+    bool bSpoofLockscreenThreadKeep = true;
     bool bSpoofLockscreenPatched = false; // Boolean to track if spoof lockscreen is active
 
     // Function prototypes for the main definitions of pkhc related features
