@@ -16,12 +16,11 @@ Runtime patching and modification tool for handyCafe
 * handyCafe 4.1.16 (10/August/2016)
 
 ## Compiling
-<i>If you are using VSCode with the C/C++ extension from microsoft, Open the directory on the editor, press <b>Ctrl + Shift + B</b> to build the project</i>
-* Compiler: [MinGW (i686)](https://sourceforge.net/projects/mingw-w64/)
-* mingw args  (Release standalone build): <i>-static -Ofast -v -mwindows -lpsapi -lversion</i>
-* Platform: x86
-* Main file: <b>[pkhandycafe.cpp](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.cpp)</b>
+<i>Open in Visual Studio through <b>pk_handycafe.vcxproj</b>, setup the build config, and press <b>Ctrl + B</b></i>
+* Solution Config: Release
+* Solution Platform: x86
 * Character set: Multi-byte
+* Main file: <b>[pkhandycafe.cpp](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.cpp)</b>
 
 ## Note
 * When compiling with VSCode you might need to retarget the path in </b>[task.json](https://github.com/rogueeeee/pk_handycafe/blob/master/.vscode/tasks.json)</b>
@@ -34,7 +33,9 @@ to prevent errors on compilation. By default, this release uses the <b>patchtabl
 in the repo, define <b>[PKHC_DISABLE_AUTHENTICATION_BYPASS]()</b> in <b>pkhandycafe.h</b>
 to prevent errors on compilation. By default, this release uses the <b>patchtable_noauth_dummy.h~~</b>
 
-* Support for 4.1.16 ~~and No authentication~~ features are intentionally disabled and excluded from the repository.
+* Support for 4.1.16 features are intentionally disabled and excluded from the repository.
+
+* [Old repo for MinGW](https://github.com/rogueeeee/pk_handycafe/releases/tag/0.0.2)
 
 * <b>[PKHC_SPOOF_LAZY](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.h#L7)</b> macro is defined for disabling the spoof lockscreen feature because it doesn't work since I lost the patchtable and the feature isn't really that useful, undefine if you got the patchtable correct
 

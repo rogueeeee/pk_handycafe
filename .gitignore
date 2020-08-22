@@ -3,3 +3,7 @@ copy_to_vmshared.cmd
 patchtable_4116.h
 *.exe
 notes.txt
+Debug/
+Release/
+obj/
+bin/
