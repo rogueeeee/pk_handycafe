@@ -9,9 +9,8 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Header Files\Patch Tables">
+      <UniqueIdentifier>{886481d6-766d-4225-922e-295e6ba6df19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -23,20 +22,20 @@
     <ClInclude Include="pkhandycafe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="patchtable_base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="patchtable_3321.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Patch Tables</Filter>
     </ClInclude>
     <ClInclude Include="patchtable_4116.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Patch Tables</Filter>
     </ClInclude>
     <ClInclude Include="patchtable_4116_dummy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Patch Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="patchtable_base.h">
+      <Filter>Header Files\Patch Tables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

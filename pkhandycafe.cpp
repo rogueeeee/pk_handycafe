@@ -69,14 +69,14 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     
                 // Obtain window info
                 if (!GetWindowTextA(hwndForeground, buffTitle, 32)
-                    || !GetClassNameA(hwndForeground, buffClass, 32))
+                ||  !GetClassNameA(hwndForeground, buffClass, 32))
                 {
                     continue;
                 }
     
                 // Compare window info
                 if (utils::hashfnv_partial(buffTitle, handycafe::lockscreen::wndTitleLen) != handycafe::lockscreen::wndTitle
-                    || utils::hashfnv_partial(buffClass, handycafe::lockscreen::wndClassLen) != handycafe::lockscreen::wndClass)
+                ||  utils::hashfnv_partial(buffClass, handycafe::lockscreen::wndClassLen) != handycafe::lockscreen::wndClass)
                 {
                     continue;
                 }

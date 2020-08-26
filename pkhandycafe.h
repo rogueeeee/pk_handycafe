@@ -192,7 +192,7 @@ namespace handycafe
         // Set flag for version
         bool isNewerVer = false;
         const char* ver_flag = nullptr;
-        if ((ver_a == 3 && ver_b == 3 && ver_c == 21)   // 3.3.21
+        if (              (ver_a == 3 && ver_b == 3 && ver_c == 21)  // 3.3.21
         ||  (isNewerVer = (ver_a == 4 && ver_b == 1 && ver_c == 16)) // 4.1.16
         ) {
 #ifndef PKHC_DISABLE_SUPPORT_NEW
@@ -244,8 +244,10 @@ namespace features
 // Namespace for pkhc
 namespace pkhc
 {
+#ifndef PKHC_SPOOF_LAZY
     bool bSpoofLockscreenThreadKeep = true;
     bool bSpoofLockscreenPatched = false; // Boolean to track if spoof lockscreen is active
+#endif
 
     // Function prototypes for the main definitions of pkhc related features
     void Initialize();
