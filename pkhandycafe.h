@@ -6,7 +6,7 @@
 #pragma comment(lib, "Version.lib")
 
 //#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
-#define PKHC_SPOOF_LAZY // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
+#define PKHC_DISABLE_SPOOF // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
 #define _CRT_SECURE_NO_WARNINGS // Disables CRT warnings, allows the use of sprintf()
 
 #include <Windows.h>
@@ -14,7 +14,7 @@
 #include <Psapi.h>
 #include <stdio.h>
 
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
 #include <thread>
 #endif
 #include "hash.h"
@@ -32,13 +32,13 @@
 
 typedef unsigned char* ptr_t; // Pointer type
 
-enum FeatureMethod : bool
+enum class FeatureMethod : bool
 {
     PKHC_DISABLE = false,
     PKHC_ENABLE  = true
 };
 
-enum HandyCafeVersion : unsigned char
+enum class HandyCafeVersion : unsigned char
 {
     HC_VER_NONE,
     HC_VER_UNSUPPORTED,
@@ -165,7 +165,7 @@ namespace handycafe
     DWORD            pid     = 0;           // Proccess ID
     HANDLE           handle  = nullptr;     // Handle to the handy cafe process
     ptr_t            base    = nullptr;     // Base address of the process main module
-    HandyCafeVersion ver     = HC_VER_NONE; // Handy cafe version
+    HandyCafeVersion ver     = HandyCafeVersion::HC_VER_NONE; // Handy cafe version
 
     // Handy cafe version
     unsigned int ver_a = 0,
@@ -234,7 +234,7 @@ namespace features
         void NoRemoteShutdown(FeatureMethod fm);
         void ExitHC(FeatureMethod fm);
         void NoForegroundQuery(FeatureMethod fm);
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
         void SpoofLockscreen(FeatureMethod fm);
 #endif
         void NoAuthentication(FeatureMethod fm);
@@ -244,7 +244,7 @@ namespace features
 // Namespace for pkhc
 namespace pkhc
 {
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
     bool bSpoofLockscreenThreadKeep = true;
     bool bSpoofLockscreenPatched = false; // Boolean to track if spoof lockscreen is active
 #endif

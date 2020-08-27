@@ -38,7 +38,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     ShowWindow(ui::handle::frm_Main, nCmdShow);
     UpdateWindow(ui::handle::frm_Main);
 
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
     // Key listener thread for spoof lockscreen event
     std::thread SpoofLockscreenKeyListener([]() ->  void
     {
@@ -99,7 +99,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         DispatchMessage(&msg);
     }
 
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
     SpoofLockscreenKeyListener.join();
 #endif
 
@@ -155,7 +155,7 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             HMENU ctrl_id = reinterpret_cast<HMENU>(LOWORD(wParam));
 
-            FeatureMethod flag = PKHC_DISABLE;
+            FeatureMethod flag = FeatureMethod::PKHC_DISABLE;
 
             if (ctrl_id == ui::id::btn_Attach)
                 pkhc::Initialize();
@@ -174,20 +174,20 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
             }
             else if (ctrl_id == ui::id::btn_Feature_ExitHC)
-                pkhc::FeatureFn_ExitHC(PKHC_ENABLE);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoLockscreen_Enable)) || ctrl_id == ui::id::btn_Feature_NoLockscreen_Disable)
+                pkhc::FeatureFn_ExitHC(FeatureMethod::PKHC_ENABLE);
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoLockscreen_Enable))      == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoLockscreen_Disable)
                 pkhc::FeatureFn_NoLockscreen(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoProcClear_Enable)) || ctrl_id == ui::id::btn_Feature_NoProcClear_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoProcClear_Enable))       == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoProcClear_Disable)
                 pkhc::FeatureFn_NoProcClear(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Enable)) || ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Enable))    == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Disable)
                 pkhc::FeatureFn_NoBrowserOnLogin(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Enable)) || ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Enable))  == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Disable)
                 pkhc::FeatureFn_NoRemoteShutdown(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable)) || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable)) == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
                 pkhc::FeatureFn_NoForegroundQuery(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable)) || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable))   == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
                 pkhc::FeatureFn_SpoofLockscreen(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoAuthentication_Enable)) || ctrl_id == ui::id::btn_Feature_NoAuthentication_Disable)
+            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoAuthentication_Enable))  == FeatureMethod::PKHC_ENABLE || ctrl_id == ui::id::btn_Feature_NoAuthentication_Disable)
                 pkhc::FeatureFn_NoAuthentication(flag);
 
             break;
@@ -225,9 +225,9 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             if (handycafe::handle)
                 CloseHandle(handycafe::handle);
-
+#ifndef PKHC_DISABLE_SPOOF
             pkhc::bSpoofLockscreenThreadKeep = false;
-
+#endif
             PostQuitMessage(0);
             break;
         }
@@ -243,62 +243,62 @@ namespace features
     {
         void NoLockscreen(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching lockscreen..." : "Restoring lockscreen...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching lockscreen..." : "Restoring lockscreen...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoLockScreen) :
                 utils::Restore(&patchtable_3321::NoLockScreen)
                 )
                 ) {
-                ui::status::set(fm ? "Patching lockscreen failed..." : "Restoring lockscreen failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching lockscreen failed..." : "Restoring lockscreen failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No lockscreen enabled" : "No lockscreen disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No lockscreen enabled" : "No lockscreen disabled");
         }
 
         void NoProcClear(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching proc clear..." : "Restoring proc clear...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching proc clear..." : "Restoring proc clear...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoProcClear) :
                 utils::Restore(&patchtable_3321::NoProcClear)
                 )
                 ) {
-                ui::status::set(fm ? "Patching proc clear failed..." : "Restoring proc clear failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching proc clear failed..." : "Restoring proc clear failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No proc clear enabled" : "No proc clear disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No proc clear enabled" : "No proc clear disabled");
         }
 
         void NoBrowserOnLogin(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching browser on login..." : "Restoring browser on login...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching browser on login..." : "Restoring browser on login...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoBrowserOnLogin) :
                 utils::Restore(&patchtable_3321::NoBrowserOnLogin)
                 )
                 ) {
-                ui::status::set(fm ? "Patching proc clear failed..." : "Restoring proc clear failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching proc clear failed..." : "Restoring proc clear failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No browser on login enabled" : "No browser on login disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No browser on login enabled" : "No browser on login disabled");
         }
 
         void NoRemoteShutdown(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching remote shutdown..." : "Restoring remote shutdown...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching remote shutdown..." : "Restoring remote shutdown...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoRemoteShutdown) :
                 utils::Restore(&patchtable_3321::NoRemoteShutdown)
                 )
                 ) {
-                ui::status::set(fm ? "Patching remote shutdown failed..." : "Restoring remote shutdown failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching remote shutdown failed..." : "Restoring remote shutdown failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No remote shutdown enabled" : "No remote shutdown disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No remote shutdown enabled" : "No remote shutdown disabled");
         }
 
         void ExitHC(FeatureMethod fm)
@@ -320,50 +320,50 @@ namespace features
 
         void NoForegroundQuery(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching foreground query..." : "Restoring foreground query...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching foreground query..." : "Restoring foreground query...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoForegroundQuery) :
                 utils::Restore(&patchtable_3321::NoForegroundQuery)
                 )
                 ) {
-                ui::status::set(fm ? "Patching foreground query failed..." : "Restoring foreground query failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching foreground query failed..." : "Restoring foreground query failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No foreground query enabled" : "No foreground query disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No foreground query enabled" : "No foreground query disabled");
         }
 
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
         void SpoofLockscreen(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
-            if (!(fm ?
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Enabling lockscreen spoof..." : "Disabling lockscreen spoof...");
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::SpoofLockscreen) : // Only patch the desktop setup, lockscreen spoof patch is applied on event
                 utils::Restore(&patchtable_3321::SpoofLockscreen) && utils::Restore(&patchtable_3321::SpoofLockscreen_event_getforeground)
                 )
                 ) {
-                ui::status::set(fm ? "Enabling lockscreen spoof failed..." : "Disabling lockscreen spoof failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Enabling lockscreen spoof failed..." : "Disabling lockscreen spoof failed...");
                 return;
             }
 
-            pkhc::bSpoofLockscreenPatched = fm;
-            ui::status::set(fm ? "Lockscreen spoof enabled" : "Lockscreen spoof disabled");
+            pkhc::bSpoofLockscreenPatched = fm == FeatureMethod::PKHC_ENABLE;
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Lockscreen spoof enabled" : "Lockscreen spoof disabled");
         }
 #endif
 
         void NoAuthentication(FeatureMethod fm)
         {
             ui::status::set(fm ? "Patching no auth..." : "Restoring no auth...");
-            if (!(fm ?
+            if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoAuthentication) :
                 utils::Restore(&patchtable_3321::NoAuthentication)
                 )
                 ) {
-                ui::status::set(fm ? "Patching no auth failed..." : "Restoring no auth failed...");
+                ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching no auth failed..." : "Restoring no auth failed...");
                 return;
             }
 
-            ui::status::set(fm ? "No auth enabled" : "No auth disabled");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "No auth enabled" : "No auth disabled");
         }
     }
 }
@@ -559,7 +559,7 @@ namespace pkhc
             if (isNewerVer)
             {
                 // Version 4.1.16
-                handycafe::ver = HC_VER_4_1_16;
+                handycafe::ver = HandyCafeVersion::HC_VER_4_1_16;
 
 #ifndef PKHC_DISABLE_SUPPORT_NEW
 #elif
@@ -576,20 +576,20 @@ namespace pkhc
             else
             {
                 // Version 3.3.21
-                handycafe::ver = HC_VER_3_3_21;
-                pkhc::FeatureFn_NoLockscreen = features::v3321::NoLockscreen;
-                pkhc::FeatureFn_NoProcClear = features::v3321::NoProcClear;
-                pkhc::FeatureFn_NoBrowserOnLogin = features::v3321::NoBrowserOnLogin;
-                pkhc::FeatureFn_NoRemoteShutdown = features::v3321::NoRemoteShutdown;
-                pkhc::FeatureFn_ExitHC = features::v3321::ExitHC;
+                handycafe::ver                    = HandyCafeVersion::HC_VER_3_3_21;
+                pkhc::FeatureFn_NoLockscreen      = features::v3321::NoLockscreen;
+                pkhc::FeatureFn_NoProcClear       = features::v3321::NoProcClear;
+                pkhc::FeatureFn_NoBrowserOnLogin  = features::v3321::NoBrowserOnLogin;
+                pkhc::FeatureFn_NoRemoteShutdown  = features::v3321::NoRemoteShutdown;
+                pkhc::FeatureFn_ExitHC            = features::v3321::ExitHC;
                 pkhc::FeatureFn_NoForegroundQuery = features::v3321::NoForegroundQuery;
-#ifndef PKHC_SPOOF_LAZY
+                pkhc::FeatureFn_NoAuthentication  = features::v3321::NoAuthentication;
+#ifndef PKHC_DISABLE_SPOOF
                 pkhc::FeatureFn_SpoofLockscreen = features::v3321::SpoofLockscreen;
 #endif
-                pkhc::FeatureFn_NoAuthentication = features::v3321::NoAuthentication;
             }
 
-#ifdef PKHC_SPOOF_LAZY
+#ifdef PKHC_DISABLE_SPOOF
             pkhc::FeatureFn_SpoofLockscreen = [](FeatureMethod fm) -> void
             {
                 ui::status::set("Spoof lockscreen is disabled");
@@ -599,15 +599,15 @@ namespace pkhc
         else
         {
             // Version is unsupported
-            handycafe::ver = HC_VER_UNSUPPORTED;
-            pkhc::FeatureFn_NoLockscreen = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_NoProcClear = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_NoBrowserOnLogin = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_NoRemoteShutdown = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_ExitHC = pkhc::FeatureFn_NotSupported;
+            handycafe::ver                    = HandyCafeVersion::HC_VER_UNSUPPORTED;
+            pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_NoBrowserOnLogin  = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_NotSupported;
             pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_SpoofLockscreen = pkhc::FeatureFn_NotSupported;
-            pkhc::FeatureFn_NoAuthentication = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_SpoofLockscreen   = pkhc::FeatureFn_NotSupported;
+            pkhc::FeatureFn_NoAuthentication  = pkhc::FeatureFn_NotSupported;
         }
 
 
@@ -624,7 +624,7 @@ namespace pkhc
             return;
         }
 
-        if (handycafe::ver == HC_VER_NONE || handycafe::ver == HC_VER_UNSUPPORTED)
+        if (handycafe::ver == HandyCafeVersion::HC_VER_NONE || handycafe::ver == HandyCafeVersion::HC_VER_UNSUPPORTED)
         {
             ui::status::set("Invalid version");
             return;
@@ -638,19 +638,19 @@ namespace pkhc
                 "No browser on login: %s\r\n"
                 "No remote shutdown: %s\r\n"
                 "No foreground query:%s\r\n"
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
                 "Spoof Lockscreen: %s\r\n"
 #endif
                 "No Authentioation: %s",
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen : &patchtable_4116::NoLockScreen, nullptr),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoProcClear : &patchtable_4116::NoProcClear, nullptr),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin : &patchtable_4116::NoBrowserOnLogin, nullptr),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown : &patchtable_4116::NoRemoteShutdown, nullptr),
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
-#ifndef PKHC_SPOOF_LAZY
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen : &patchtable_4116::SpoofLockscreen, nullptr),
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen, nullptr),
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear, nullptr),
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin, nullptr),
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown, nullptr),
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
+#ifndef PKHC_DISABLE_SPOOF
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen, nullptr),
 #endif
-                utils::GetASMStatus(handycafe::ver == HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication : &patchtable_4116::NoAuthentication, nullptr)
+                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::HC_VER_3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication, nullptr)
         );
 
         MessageBoxA(ui::handle::frm_Main, msgbuffer, "Assembly check", 0);
@@ -748,7 +748,7 @@ namespace utils
         DWORD          oldProtect = 0; // Stores the old protection flag of the memory section
         unsigned char  singlebyte = 0x0; // Used if allocation is unecessary
         unsigned char* readbuffer = pt->size > 1 ? new unsigned char[pt->size] : &singlebyte; // Points to the byte array for comparison
-        HCASMSTATUS    asmstat = HC_ASM_INVALID; // Status of the assembly
+        HCASMSTATUS    asmstat    = HCASMSTATUS::HC_ASM_INVALID; // Status of the assembly
 
         if (!readbuffer)
             return nullptr;
@@ -767,10 +767,10 @@ namespace utils
 
         // Check for Patch bytes
         if (comparebytes(readbuffer, pt->byte_new, pt->size))
-            asmstat = HC_ASM_PATCHED;
+            asmstat = HCASMSTATUS::HC_ASM_PATCHED;
         // Check if bytes are unmodified
         else if (comparebytes(readbuffer, pt->byte_old, pt->size))
-            asmstat = HC_ASM_ORIGIN;
+            asmstat = HCASMSTATUS::HC_ASM_ORIGIN;
         // If neither, by default the byte array is invalid.
 
         // Return the asm status through the out_status pointer if available
@@ -781,6 +781,6 @@ namespace utils
         delete[] readbuffer;
 
         // Return the status
-        return hcasm_to_text[asmstat];
+        return hcasm_to_text[static_cast<unsigned char>(asmstat)];
     }
 }

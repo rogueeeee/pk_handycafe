@@ -21,7 +21,7 @@ struct patchtable_t
     patchtable_t* next = nullptr;     // Pointer to the next patchtable
 };
 
-enum HCASMSTATUS : unsigned char
+enum class HCASMSTATUS : unsigned char
 {
     HC_ASM_INVALID,
     HC_ASM_ORIGIN,

@@ -63,7 +63,7 @@ namespace patchtable_3321
         0x127C1A,
         2
     };
-#ifndef PKHC_SPOOF_LAZY
+#ifndef PKHC_DISABLE_SPOOF
     patchtable_t __SpoofLockscreen_next_setupdesktop =
     {
         "sl_7",
