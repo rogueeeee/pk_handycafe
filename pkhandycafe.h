@@ -161,10 +161,11 @@ namespace ui
 namespace handycafe
 {
     constexpr FNV64  name    = utils::hashfnv("hndclient.exe");
-    constexpr size_t namelen = sizeof("hndclient.exe") - 1;
-    DWORD            pid     = 0;           // Proccess ID
-    HANDLE           handle  = nullptr;     // Handle to the handy cafe process
-    ptr_t            base    = nullptr;     // Base address of the process main module
+    constexpr size_t namelen = 14;
+
+    DWORD            pid     = 0;                             // Proccess ID
+    HANDLE           handle  = nullptr;                       // Handle to the handy cafe process
+    ptr_t            base    = nullptr;                       // Base address of the process main module
     HandyCafeVersion ver     = HandyCafeVersion::HC_VER_NONE; // Handy cafe version
 
     // Handy cafe version
@@ -185,15 +186,15 @@ namespace handycafe
 
     void ReDrawText()
     {
-        sprintf(handycafe::infostr::procid, "ID: %0*d", 10, pid);
+        sprintf(handycafe::infostr::procid , "ID: %0*d", 10, pid);
         sprintf(handycafe::infostr::handle, "HANDLE: 0x%08p", handle);
         sprintf(handycafe::infostr::base, "BASE: 0x%08p", base);
 
         // Set flag for version
         bool isNewerVer = false;
         const char* ver_flag = nullptr;
-        if (              (ver_a == 3 && ver_b == 3 && ver_c == 21)  // 3.3.21
-        ||  (isNewerVer = (ver_a == 4 && ver_b == 1 && ver_c == 16)) // 4.1.16
+        if (             (ver_a == 3 && ver_b == 3 && ver_c == 21)  // 3.3.21
+        || (isNewerVer = (ver_a == 4 && ver_b == 1 && ver_c == 16)) // 4.1.16
         ) {
 #ifndef PKHC_DISABLE_SUPPORT_NEW
             ver_flag = "(Supported)";
@@ -206,19 +207,18 @@ namespace handycafe
             ver_flag = "(Unsupported)";
         }
 
-        sprintf(handycafe::infostr::ver, "VERSION: %02u.%02u.%02u %s", ver_a, ver_b, ver_c, ver_flag);
-        handycafe::infostr::ver_len = strlen(handycafe::infostr::ver);
+        handycafe::infostr::ver_len = sprintf(handycafe::infostr::ver, "VERSION: %02u.%02u.%02u %s", ver_a, ver_b, ver_c, ver_flag);
 
         InvalidateRect(ui::handle::frm_Main, NULL, true);
     }
 
     namespace lockscreen
     {
-        constexpr FNV64  wndTitle = utils::hashfnv("HandyCafe Client");
-        constexpr size_t wndTitleLen = sizeof("HandyCafe Client") - 1;
+        constexpr FNV64  wndTitle    = utils::hashfnv("HandyCafe Client");
+        constexpr size_t wndTitleLen = 16;
 
-        constexpr FNV64  wndClass = utils::hashfnv("TfrmWait");
-        constexpr size_t wndClassLen = sizeof("TfrmWait") - 1;
+        constexpr FNV64  wndClass    = utils::hashfnv("TfrmWait");
+        constexpr size_t wndClassLen = 8;
     }
 
 }
@@ -265,14 +265,14 @@ namespace pkhc
     }
 
     // Function pointer to proper feature function
-    FeatureFn FeatureFn_NoLockscreen = FeatureFn_Default;
-    FeatureFn FeatureFn_NoProcClear = FeatureFn_Default;
-    FeatureFn FeatureFn_NoBrowserOnLogin = FeatureFn_Default;
-    FeatureFn FeatureFn_NoRemoteShutdown = FeatureFn_Default;
-    FeatureFn FeatureFn_ExitHC = FeatureFn_Default;
+    FeatureFn FeatureFn_NoLockscreen      = FeatureFn_Default;
+    FeatureFn FeatureFn_NoProcClear       = FeatureFn_Default;
+    FeatureFn FeatureFn_NoBrowserOnLogin  = FeatureFn_Default;
+    FeatureFn FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
+    FeatureFn FeatureFn_ExitHC            = FeatureFn_Default;
     FeatureFn FeatureFn_NoForegroundQuery = FeatureFn_Default;
-    FeatureFn FeatureFn_SpoofLockscreen = FeatureFn_Default;
-    FeatureFn FeatureFn_NoAuthentication = FeatureFn_Default;
+    FeatureFn FeatureFn_SpoofLockscreen   = FeatureFn_Default;
+    FeatureFn FeatureFn_NoAuthentication  = FeatureFn_Default;
 }
 
 namespace utils

@@ -72,23 +72,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>.\bin\debug</OutDir>
-    <IntDir>.\obj\debug</IntDir>
+    <OutDir>.\bin\debug\</OutDir>
+    <IntDir>.\obj\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\bin\release</OutDir>
-    <IntDir>.\obj\release</IntDir>
+    <OutDir>.\bin\release\</OutDir>
+    <IntDir>.\obj\release\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>.\bin\debug</OutDir>
-    <IntDir>.\obj\debug</IntDir>
+    <OutDir>.\bin\debug\</OutDir>
+    <IntDir>.\obj\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\bin\release</OutDir>
-    <IntDir>.\obj\release</IntDir>
+    <OutDir>.\bin\release\</OutDir>
+    <IntDir>.\obj\release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

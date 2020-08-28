@@ -353,7 +353,7 @@ namespace features
 
         void NoAuthentication(FeatureMethod fm)
         {
-            ui::status::set(fm ? "Patching no auth..." : "Restoring no auth...");
+            ui::status::set(fm == FeatureMethod::PKHC_ENABLE ? "Patching no auth..." : "Restoring no auth...");
             if (!(fm == FeatureMethod::PKHC_ENABLE ?
                 utils::Patch(&patchtable_3321::NoAuthentication) :
                 utils::Restore(&patchtable_3321::NoAuthentication)
@@ -377,18 +377,18 @@ namespace pkhc
         ui::status::set("Reset...");
         handycafe::base = nullptr;
         handycafe::pid = 0;
-        handycafe::ver = HC_VER_NONE;
+        handycafe::ver = HandyCafeVersion::HC_VER_NONE;
         handycafe::ver_a = handycafe::ver_b = handycafe::ver_c = 0;
 
         // Reset procedure: features
-        pkhc::FeatureFn_NoLockscreen = FeatureFn_Default;
-        pkhc::FeatureFn_NoProcClear = FeatureFn_Default;
-        pkhc::FeatureFn_NoBrowserOnLogin = FeatureFn_Default;
-        pkhc::FeatureFn_NoRemoteShutdown = FeatureFn_Default;
+        pkhc::FeatureFn_NoLockscreen      = FeatureFn_Default;
+        pkhc::FeatureFn_NoProcClear       = FeatureFn_Default;
+        pkhc::FeatureFn_NoBrowserOnLogin  = FeatureFn_Default;
+        pkhc::FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
         pkhc::FeatureFn_NoForegroundQuery = FeatureFn_Default;
-        pkhc::FeatureFn_ExitHC = FeatureFn_Default;
-        pkhc::FeatureFn_SpoofLockscreen = FeatureFn_Default;
-        pkhc::FeatureFn_NoAuthentication = FeatureFn_Default;
+        pkhc::FeatureFn_ExitHC            = FeatureFn_Default;
+        pkhc::FeatureFn_SpoofLockscreen   = FeatureFn_Default;
+        pkhc::FeatureFn_NoAuthentication  = FeatureFn_Default;
 
         // Reset procedure: handle
         CloseHandle(handycafe::handle);
@@ -397,9 +397,10 @@ namespace pkhc
 
         // Init
         HANDLE            hTool32 = nullptr; // Handle to cth32
-        DWORD             _pid = 0;       // Temp pid
+        DWORD             _pid    = 0;       // Temp pid
         HANDLE            _handle = nullptr; // temp handle pointer
-        ptr_t             _base = nullptr; // Temp base address pointer
+        ptr_t             _base   = nullptr; // Temp base address pointer
+        LPSTR             verData = nullptr; // Version data
         VS_FIXEDFILEINFO* verInfo = nullptr; // File version info
 
         // Scope for process search
@@ -482,12 +483,11 @@ namespace pkhc
 
         // Scope for version parsing        
         {
-            char              path[256] = { 0 };
-            DWORD             hVer = 0;
-            UINT              size = 0;
-            LPBYTE            lpBuffer = nullptr;
-            DWORD             verSize = 0;
-            LPSTR             verData = nullptr;
+            char   path[256] = { 0 };
+            DWORD  hVer      = 0;
+            UINT   size      = 0;
+            LPBYTE lpBuffer  = nullptr;
+            DWORD  verSize   = 0;
 
             ui::status::set("Obtaining path...");
             if (!GetModuleFileNameExA(_handle, nullptr, path, 256))
@@ -497,7 +497,7 @@ namespace pkhc
             }
 
             ui::status::set("Checking file version size...");
-            if ((verSize = GetFileVersionInfoSize(path, &hVer)) == 0)
+            if ((verSize = GetFileVersionInfoSizeA(path, &hVer)) == 0)
             {
                 ui::status::set("File version size check failed!");
                 return;
@@ -511,14 +511,14 @@ namespace pkhc
             }
 
             ui::status::set("Obtaining file version info...");
-            if (!GetFileVersionInfo(path, hVer, verSize, verData))
+            if (!GetFileVersionInfoA(path, hVer, verSize, verData))
             {
                 ui::status::set("Failed to obtain file version info!");
                 return;
             }
 
             ui::status::set("Querying file version info...");
-            if (!VerQueryValue(verData, "\\", (VOID FAR * FAR*) & lpBuffer, &size))
+            if (!VerQueryValueA(verData, "\\", (VOID FAR * FAR*) &lpBuffer, &size))
             {
                 ui::status::set("Failed to query file version info!");
                 return;
@@ -531,7 +531,8 @@ namespace pkhc
             }
 
             verInfo = reinterpret_cast<VS_FIXEDFILEINFO*>(lpBuffer);
-            if (verInfo->dwSignature != 0xfeef04bd)
+
+            if (!verInfo || verInfo->dwSignature != 0xfeef04bd)
             {
                 ui::status::set("Invalid file version signature..");
                 return;
@@ -539,22 +540,22 @@ namespace pkhc
         }
 
         // Assign values parsed
-        handycafe::ver_a = (verInfo->dwProductVersionMS) >> 16 & 0xffff;
-        handycafe::ver_b = verInfo->dwProductVersionMS & 0xffff;
-        handycafe::ver_c = (((verInfo->dwProductVersionLS) >> 16 & 0xffff) * 10) + verInfo->dwProductVersionLS & 0xffff;
+        handycafe::ver_a  = (verInfo->dwProductVersionMS) >> 16 & 0xffff;
+        handycafe::ver_b  = verInfo->dwProductVersionMS & 0xffff;
+        handycafe::ver_c  = (((verInfo->dwProductVersionLS) >> 16 & 0xffff) * 10) + verInfo->dwProductVersionLS & 0xffff;
         handycafe::handle = _handle;
-        handycafe::pid = _pid;
-        handycafe::base = _base;
+        handycafe::pid    = _pid;
+        handycafe::base   = _base;
 
         ui::status::set("Deallocating file ver buffer...");
-        delete[] reinterpret_cast<LPBYTE>(verInfo);
-
+        delete[] reinterpret_cast<LPBYTE>(verData);
+        
         ui::status::set("Setting up features...");
 
         bool isNewerVer = false;
-        if ((handycafe::ver_a == 3 && handycafe::ver_b == 3 && handycafe::ver_c == 21)   // 3.3.21
-            || (isNewerVer = (handycafe::ver_a == 4 && handycafe::ver_b == 1 && handycafe::ver_c == 16)) // 4.1.16
-            ) {
+        if (             (handycafe::ver_a == 3 && handycafe::ver_b == 3 && handycafe::ver_c == 21)   // 3.3.21
+        || (isNewerVer = (handycafe::ver_a == 4 && handycafe::ver_b == 1 && handycafe::ver_c == 160)) // 4.1.16
+        ) {
             // Version is supported
             if (isNewerVer)
             {
@@ -562,15 +563,16 @@ namespace pkhc
                 handycafe::ver = HandyCafeVersion::HC_VER_4_1_16;
 
 #ifndef PKHC_DISABLE_SUPPORT_NEW
+
 #elif
-                pkhc::FeatureFn_NoLockscreen = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoProcClear = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoBrowserOnLogin = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoRemoteShutdown = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_ExitHC = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoBrowserOnLogin  = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_SpoofLockscreen = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoAuthentication = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_SpoofLockscreen   = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoAuthentication  = pkhc::FeatureFn_NotSupported;
 #endif
             }
             else
