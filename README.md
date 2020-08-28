@@ -23,21 +23,16 @@ Runtime patching and modification tool for handyCafe
 * Main file: <b>[pkhandycafe.cpp](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.cpp)</b>
 
 ## Note
-* When compiling with VSCode you might need to retarget the path in </b>[task.json](https://github.com/rogueeeee/pk_handycafe/blob/master/.vscode/tasks.json)</b>
+
+* Support for <u><b>handyCafe version 4.1.16</b> features are <b>intentionally disabled</b></u> and excluded from the repository.
 
 * Patch table for HandyCafe 4.1.16 (latest handyCafe version) is not included
 in the repo, define <b>[PKHC_DISABLE_SUPPORT_NEW](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.h#L8)</b> in <b>pkhandycafe.h</b>
 to prevent errors on compilation. By default, this release uses the <b>patchtable_4116_dummy.h</b>
 
-* ~~Patch table for the No authentication feature is not included
-in the repo, define <b>[PKHC_DISABLE_AUTHENTICATION_BYPASS]()</b> in <b>pkhandycafe.h</b>
-to prevent errors on compilation. By default, this release uses the <b>patchtable_noauth_dummy.h~~</b>
-
-* Support for 4.1.16 features are intentionally disabled and excluded from the repository.
-
 * [Old repo for MinGW](https://github.com/rogueeeee/pk_handycafe/releases/tag/0.0.2)
 
-* <b>[PKHC_SPOOF_LAZY](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.h#L9)</b> macro is defined for disabling the spoof lockscreen feature because it doesn't work since I lost the patchtable and the feature isn't really that useful, undefine if you got the patchtable correct
+* <b>[PKHC_SPOOF_LAZY](https://github.com/rogueeeee/pk_handycafe/blob/master/pkhandycafe.h#L9)</b> macro is defined for disabling the spoof lockscreen feature because I broke it, undefine if you got the patchtable correct
 
 ## License
 MIT
