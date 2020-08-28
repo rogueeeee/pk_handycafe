@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "Version.lib")
 
-//#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
+#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
 #define PKHC_DISABLE_SPOOF // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
 #define _CRT_SECURE_NO_WARNINGS // Disables CRT warnings, allows the use of sprintf()
 
@@ -34,16 +34,17 @@ typedef unsigned char* ptr_t; // Pointer type
 
 enum class FeatureMethod : bool
 {
-    PKHC_DISABLE = false,
-    PKHC_ENABLE  = true
+    DISABLE = false,
+    ENABLE  = true
 };
 
 enum class HandyCafeVersion : unsigned char
 {
-    HC_VER_NONE,
-    HC_VER_UNSUPPORTED,
-    HC_VER_3_3_21,
-    HC_VER_4_1_16
+    NONE,
+    UNSUPPORTED,
+    DISABLED,
+    V3_3_21,
+    V4_1_16
 };
 
 const char* hcasm_to_text[] =
@@ -166,7 +167,7 @@ namespace handycafe
     DWORD            pid     = 0;                             // Proccess ID
     HANDLE           handle  = nullptr;                       // Handle to the handy cafe process
     ptr_t            base    = nullptr;                       // Base address of the process main module
-    HandyCafeVersion ver     = HandyCafeVersion::HC_VER_NONE; // Handy cafe version
+    HandyCafeVersion ver     = HandyCafeVersion::NONE; // Handy cafe version
 
     // Handy cafe version
     unsigned int ver_a = 0,
@@ -179,7 +180,7 @@ namespace handycafe
         char procid[] = "ID: 0000000000";
         char handle[] = "HANDLE: 0x00000000";
         char base[]   = "BASE: 0x00000000";
-        char ver[32]  = "VERSION: 00.00.00 (Unsupported)";
+        char ver[32]  = "VERSION: 00.00.00";
 
         size_t ver_len = sizeof(ver);
     }
@@ -193,18 +194,21 @@ namespace handycafe
         // Set flag for version
         bool isNewerVer = false;
         const char* ver_flag = nullptr;
-        if (             (ver_a == 3 && ver_b == 3 && ver_c == 21)  // 3.3.21
-        || (isNewerVer = (ver_a == 4 && ver_b == 1 && ver_c == 16)) // 4.1.16
-        ) {
-#ifndef PKHC_DISABLE_SUPPORT_NEW
-            ver_flag = "(Supported)";
-#else
-            ver_flag = isNewerVer ? "(Disabled)" : "(Supported)";
-#endif
-        }
-        else
+
+        switch (handycafe::ver)
         {
-            ver_flag = "(Unsupported)";
+            case HandyCafeVersion::NONE:
+                ver_flag = "";
+                break;
+            case HandyCafeVersion::DISABLED:
+                ver_flag = "(Disabled)";
+                break;
+            case HandyCafeVersion::UNSUPPORTED:
+                ver_flag = "(Unsupported)";
+                break;
+            default:
+                ver_flag = "(Supported)";
+                break;
         }
 
         handycafe::infostr::ver_len = sprintf(handycafe::infostr::ver, "VERSION: %02u.%02u.%02u %s", ver_a, ver_b, ver_c, ver_flag);
@@ -234,11 +238,26 @@ namespace features
         void NoRemoteShutdown(FeatureMethod fm);
         void ExitHC(FeatureMethod fm);
         void NoForegroundQuery(FeatureMethod fm);
-#ifndef PKHC_DISABLE_SPOOF
+        #ifndef PKHC_DISABLE_SPOOF
         void SpoofLockscreen(FeatureMethod fm);
-#endif
+        #endif
         void NoAuthentication(FeatureMethod fm);
     }
+
+    namespace v4116
+    {
+        void NoLockscreen(FeatureMethod fm);
+        void NoProcClear(FeatureMethod fm);
+        void NoBrowserOnLogin(FeatureMethod fm);
+        void NoRemoteShutdown(FeatureMethod fm);
+        void ExitHC(FeatureMethod fm);
+        void NoForegroundQuery(FeatureMethod fm);
+        #ifndef PKHC_DISABLE_SPOOF
+        void SpoofLockscreen(FeatureMethod fm);
+        #endif
+        void NoAuthentication(FeatureMethod fm);
+    }
+
 }
 
 // Namespace for pkhc
