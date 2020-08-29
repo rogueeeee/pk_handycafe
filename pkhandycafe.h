@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "Version.lib")
 
-#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
+//#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
 #define PKHC_DISABLE_SPOOF // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
 #define _CRT_SECURE_NO_WARNINGS // Disables CRT warnings, allows the use of sprintf()
 
@@ -230,32 +230,25 @@ namespace handycafe
 // Namespace for pkhc's features
 namespace features
 {
+    void NoLockscreen(FeatureMethod fm);
+    void NoProcClear(FeatureMethod fm);
+    void NoBrowserOnLogin(FeatureMethod fm);
+    void NoRemoteShutdown(FeatureMethod fm);
+    void ExitHC(FeatureMethod fm);
+    void NoForegroundQuery(FeatureMethod fm);
+    #ifndef PKHC_DISABLE_SPOOF
+    void SpoofLockscreen(FeatureMethod fm);
+    #endif
+    void NoAuthentication(FeatureMethod fm);
+
+    // Namespace for v3.3.21 specific functions
     namespace v3321
     {
-        void NoLockscreen(FeatureMethod fm);
-        void NoProcClear(FeatureMethod fm);
-        void NoBrowserOnLogin(FeatureMethod fm);
-        void NoRemoteShutdown(FeatureMethod fm);
-        void ExitHC(FeatureMethod fm);
-        void NoForegroundQuery(FeatureMethod fm);
-        #ifndef PKHC_DISABLE_SPOOF
-        void SpoofLockscreen(FeatureMethod fm);
-        #endif
-        void NoAuthentication(FeatureMethod fm);
     }
 
+    // Namespace for v4.1.16 specific functions
     namespace v4116
     {
-        void NoLockscreen(FeatureMethod fm);
-        void NoProcClear(FeatureMethod fm);
-        void NoBrowserOnLogin(FeatureMethod fm);
-        void NoRemoteShutdown(FeatureMethod fm);
-        void ExitHC(FeatureMethod fm);
-        void NoForegroundQuery(FeatureMethod fm);
-        #ifndef PKHC_DISABLE_SPOOF
-        void SpoofLockscreen(FeatureMethod fm);
-        #endif
-        void NoAuthentication(FeatureMethod fm);
     }
 
 }
