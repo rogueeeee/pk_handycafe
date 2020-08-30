@@ -633,7 +633,7 @@ namespace pkhc
             {
                 pkhc::FeatureFn_NoLockscreen      = features::NoLockscreen;
                 pkhc::FeatureFn_NoProcClear       = features::NoProcClear;
-                pkhc::FeatureFn_NoBrowserLogin  = features::NoBrowserOnLogin;
+                pkhc::FeatureFn_NoBrowserLogin    = features::NoBrowserOnLogin;
                 pkhc::FeatureFn_NoRemoteShutdown  = features::NoRemoteShutdown;
                 pkhc::FeatureFn_ExitHC            = features::ExitHC;
                 pkhc::FeatureFn_NoForegroundQuery = features::NoForegroundQuery;
@@ -651,7 +651,7 @@ namespace pkhc
             {
                 pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoBrowserLogin  = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoBrowserLogin    = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_NotSupported;
@@ -703,15 +703,15 @@ namespace pkhc
                   "Spoof Lockscreen: %s\r\n"
                   #endif
                   "No Authentication: %s",
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen, nullptr),
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear, nullptr),
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin, nullptr),
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen,      nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear,       nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin,  nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown,  nullptr),
                   utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
                   #ifndef PKHC_DISABLE_SPOOF
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen,   nullptr),
                   #endif
-                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication, nullptr)
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication,  nullptr)
         );
 
         MessageBoxA(ui::handle::frm_Main, msgbuffer, "Assembly check", 0);
