@@ -7,7 +7,6 @@
 
 //#define PKHC_DISABLE_SUPPORT_NEW // Define flag for disabling features related to the widely used new version of HandyCafe (v4.1.16)
 #define PKHC_DISABLE_SPOOF // Disables the spoof lockscreen feature because it doesn't work (I lost the patchtable and the feature isn't really that useful)
-#define _CRT_SECURE_NO_WARNINGS // Disables CRT warnings, allows the use of sprintf()
 
 #include <Windows.h>
 #include <TlHelp32.h>
@@ -187,9 +186,9 @@ namespace handycafe
 
     void ReDrawText()
     {
-        sprintf(handycafe::infostr::procid , "ID: %0*d", 10, pid);
-        sprintf(handycafe::infostr::handle, "HANDLE: 0x%08p", handle);
-        sprintf(handycafe::infostr::base, "BASE: 0x%08p", base);
+        _snprintf_s(handycafe::infostr::procid , sizeof(infostr::procid) - 1, "ID: %0*d", 10, pid);
+        _snprintf_s(handycafe::infostr::handle, sizeof(infostr::handle) - 1, "HANDLE: 0x%08p", handle);
+        _snprintf_s(handycafe::infostr::base, sizeof(infostr::base) - 1, "BASE: 0x%08p", base);
 
         // Set flag for version
         bool isNewerVer = false;
@@ -211,7 +210,7 @@ namespace handycafe
                 break;
         }
 
-        handycafe::infostr::ver_len = sprintf(handycafe::infostr::ver, "VERSION: %02u.%02u.%02u %s", ver_a, ver_b, ver_c, ver_flag);
+        handycafe::infostr::ver_len = _snprintf_s(handycafe::infostr::ver, sizeof(infostr::ver) - 1, "VERSION: %02u.%02u.%02u %s", ver_a, ver_b, ver_c, ver_flag);
 
         InvalidateRect(ui::handle::frm_Main, NULL, true);
     }

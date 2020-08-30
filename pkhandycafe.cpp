@@ -257,8 +257,8 @@ namespace features
     {
         ui::status::set(fm == FeatureMethod::ENABLE ? "Patching proc clear..." : "Restoring proc clear...");
         if (!(fm == FeatureMethod::ENABLE ?
-            utils::Patch(&patchtable_3321::NoProcClear) :
-            utils::Restore(&patchtable_3321::NoProcClear)
+            utils::Patch(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear : &patchtable_4116::NoProcClear) :
+            utils::Restore(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear : &patchtable_4116::NoProcClear)
             )
             ) {
             ui::status::set(fm == FeatureMethod::ENABLE ? "Patching proc clear failed..." : "Restoring proc clear failed...");
@@ -272,8 +272,8 @@ namespace features
     {
         ui::status::set(fm == FeatureMethod::ENABLE ? "Patching browser on login..." : "Restoring browser on login...");
         if (!(fm == FeatureMethod::ENABLE ?
-            utils::Patch(&patchtable_3321::NoBrowserOnLogin) :
-            utils::Restore(&patchtable_3321::NoBrowserOnLogin)
+            utils::Patch(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin : &patchtable_4116::NoBrowserOnLogin) :
+            utils::Restore(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin : &patchtable_4116::NoBrowserOnLogin)
             )
             ) {
             ui::status::set(fm == FeatureMethod::ENABLE ? "Patching proc clear failed..." : "Restoring proc clear failed...");
@@ -287,8 +287,8 @@ namespace features
     {
         ui::status::set(fm == FeatureMethod::ENABLE ? "Patching remote shutdown..." : "Restoring remote shutdown...");
         if (!(fm == FeatureMethod::ENABLE ?
-            utils::Patch(&patchtable_3321::NoRemoteShutdown) :
-            utils::Restore(&patchtable_3321::NoRemoteShutdown)
+            utils::Patch(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown : &patchtable_4116::NoRemoteShutdown) :
+            utils::Restore(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown : &patchtable_4116::NoRemoteShutdown)
             )
             ) {
             ui::status::set(fm == FeatureMethod::ENABLE ? "Patching remote shutdown failed..." : "Restoring remote shutdown failed...");
@@ -302,7 +302,7 @@ namespace features
     {
         ui::status::set("Executing exit thread...");
 
-        HANDLE hCRT = CreateRemoteThread(handycafe::handle, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(handycafe::base + patchtable_3321::ExitHC_v::offset), nullptr, 0, nullptr);
+        HANDLE hCRT = CreateRemoteThread(handycafe::handle, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(handycafe::base + (handycafe::ver == HandyCafeVersion::V3_3_21 ? patchtable_3321::ExitHC_v::offset : patchtable_4116::ExitHC_v::offset)), nullptr, 0, nullptr);
         if (!hCRT)
         {
             ui::status::set("Failed to create exit thread");
@@ -319,8 +319,8 @@ namespace features
     {
         ui::status::set(fm == FeatureMethod::ENABLE ? "Patching foreground query..." : "Restoring foreground query...");
         if (!(fm == FeatureMethod::ENABLE ?
-            utils::Patch(&patchtable_3321::NoForegroundQuery) :
-            utils::Restore(&patchtable_3321::NoForegroundQuery)
+            utils::Patch(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery) :
+            utils::Restore(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery)
             )
             ) {
             ui::status::set(fm == FeatureMethod::ENABLE ? "Patching foreground query failed..." : "Restoring foreground query failed...");
@@ -352,8 +352,8 @@ namespace features
     {
         ui::status::set(fm == FeatureMethod::ENABLE ? "Patching no auth..." : "Restoring no auth...");
         if (!(fm == FeatureMethod::ENABLE ?
-            utils::Patch(&patchtable_3321::NoAuthentication) :
-            utils::Restore(&patchtable_3321::NoAuthentication)
+            utils::Patch(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication : &patchtable_4116::NoAuthentication) :
+            utils::Restore(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication : &patchtable_4116::NoAuthentication)
             )
             ) {
             ui::status::set(fm == FeatureMethod::ENABLE ? "Patching no auth failed..." : "Restoring no auth failed...");
@@ -544,6 +544,9 @@ namespace pkhc
         }
 
         // Assign values parsed
+        handycafe::handle = _handle;
+        handycafe::pid    = _pid;
+        handycafe::base   = _base;
         handycafe::ver_a  = (verInfo->dwProductVersionMS) >> 16 & 0xffff;
         handycafe::ver_b  = verInfo->dwProductVersionMS & 0xffff;
         handycafe::ver_c  = (((verInfo->dwProductVersionLS) >> 16 & 0xffff));
@@ -553,10 +556,6 @@ namespace pkhc
             handycafe::ver_c *= 10;
             handycafe::ver_c += verInfo->dwProductVersionLS & 0xffff;
         }
-
-        handycafe::handle = _handle;
-        handycafe::pid    = _pid;
-        handycafe::base   = _base;
 
         ui::status::set("Deallocating ver data buffer...");
         delete[] verData;
@@ -648,25 +647,26 @@ namespace pkhc
 
         char msgbuffer[256] = { '\0' };
 
-        sprintf(msgbuffer,
-                "No lockscreen: %s\r\n"
-                "No Process clear: %s\r\n"
-                "No browser on login: %s\r\n"
-                "No remote shutdown: %s\r\n"
-                "No foreground query:%s\r\n"
-                #ifndef PKHC_DISABLE_SPOOF
-                "Spoof Lockscreen: %s\r\n"
-                #endif
-                "No Authentioation: %s",
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen, nullptr),
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear, nullptr),
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin, nullptr),
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown, nullptr),
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
-                #ifndef PKHC_DISABLE_SPOOF
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen, nullptr),
-                #endif
-                utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication, nullptr)
+        _snprintf_s(msgbuffer,
+                  255,
+                  "No lockscreen: %s\r\n"
+                  "No Process clear: %s\r\n"
+                  "No browser on login: %s\r\n"
+                  "No remote shutdown: %s\r\n"
+                  "No foreground query:%s\r\n"
+                  #ifndef PKHC_DISABLE_SPOOF
+                  "Spoof Lockscreen: %s\r\n"
+                  #endif
+                  "No Authentication: %s",
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoLockScreen      : &patchtable_4116::NoLockScreen, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoProcClear       : &patchtable_4116::NoProcClear, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoBrowserOnLogin  : &patchtable_4116::NoBrowserOnLogin, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoRemoteShutdown  : &patchtable_4116::NoRemoteShutdown, nullptr),
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoForegroundQuery : &patchtable_4116::NoForegroundQuery, nullptr),
+                  #ifndef PKHC_DISABLE_SPOOF
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::SpoofLockscreen   : &patchtable_4116::SpoofLockscreen, nullptr),
+                  #endif
+                  utils::GetASMStatus(handycafe::ver == HandyCafeVersion::V3_3_21 ? &patchtable_3321::NoAuthentication  : &patchtable_4116::NoAuthentication, nullptr)
         );
 
         MessageBoxA(ui::handle::frm_Main, msgbuffer, "Assembly check", 0);
@@ -763,6 +763,16 @@ namespace utils
     // Compares a section of memory to the provided bytecode for difference
     const char* GetASMStatus(patchtable_t* pt, HCASMSTATUS* out_status)
     {
+        if (!pt || !pt->byte_old || !pt->offset || !pt->size)
+        {
+            MessageBoxA(ui::handle::frm_Main, pt ? pt->id : "No ID", "Invalid patch table", 0);
+
+            if (out_status)
+                *out_status = HCASMSTATUS::HC_ASM_INVALID;
+
+            return hcasm_to_text[static_cast<unsigned char>(HCASMSTATUS::HC_ASM_INVALID)];
+        }
+
         // helper function for comparing bytes
         static bool(*comparebytes)(unsigned char* a, pkhc_byte_t b, pkhc_size_t size) = [](unsigned char* a, pkhc_byte_t b, pkhc_size_t size) -> bool
         {
@@ -785,13 +795,11 @@ namespace utils
 
         // Unlocks the memory, reads it into a buffer, then restores its original protection flag
         if (!VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, PAGE_READWRITE, &oldProtect)
-            || !ReadProcessMemory(handycafe::handle, handycafe::base + pt->offset, readbuffer, pt->size, NULL)
-            || !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
-            ) {
+        ||  !ReadProcessMemory(handycafe::handle, handycafe::base + pt->offset, readbuffer, pt->size, NULL)
+        ||  !VirtualProtectEx(handycafe::handle, handycafe::base + pt->offset, pt->size, oldProtect, &oldProtect)
+        ) {
             delete[] readbuffer;
-
             MessageBoxA(ui::handle::frm_Main, pt->id, "ASM check failed on id", 0);
-
             return nullptr;
         }
 
