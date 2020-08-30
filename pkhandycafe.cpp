@@ -38,7 +38,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     ShowWindow(ui::handle::frm_Main, nCmdShow);
     UpdateWindow(ui::handle::frm_Main);
 
-#ifndef PKHC_DISABLE_SPOOF
+    #ifndef PKHC_DISABLE_SPOOF
     // Key listener thread for spoof lockscreen event
     std::thread SpoofLockscreenKeyListener([]() ->  void
     {
@@ -89,7 +89,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
             }
         }
     });
-#endif
+    #endif
 
     // Message handling
     MSG msg = {};
@@ -683,6 +683,13 @@ namespace utils
 
         do
         {
+
+            if (!pt->byte_old || !pt->offset || !pt->size)
+            {
+                MessageBoxA(ui::handle::frm_Main, pt->id, "Invalid patch table", 0);
+                continue;
+            }
+
             DWORD oldProtect = 0; // Stores the old protection flag of the memory section
             unsigned char  singlebyte = _PKHC_OPCODE_NOP; // Used if allocation for the NOP patching is unecessary
             unsigned char* bytearray = nullptr; // Pointer to the bytearray
@@ -729,6 +736,13 @@ namespace utils
 
         do
         {
+
+            if (!pt->byte_old || !pt->offset || !pt->size)
+            {
+                MessageBoxA(ui::handle::frm_Main, pt->id, "Invalid patch table", 0);
+                continue;
+            }
+
             DWORD oldProtect = 0; // Stores the old protection flag of the memory section
 
             // Patch and Restore the original bytes
