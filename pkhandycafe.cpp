@@ -763,16 +763,6 @@ namespace utils
     // Compares a section of memory to the provided bytecode for difference
     const char* GetASMStatus(patchtable_t* pt, HCASMSTATUS* out_status)
     {
-        if (!pt || !pt->byte_old || !pt->offset || !pt->size)
-        {
-            MessageBoxA(ui::handle::frm_Main, pt ? pt->id : "No ID", "Invalid patch table", 0);
-
-            if (out_status)
-                *out_status = HCASMSTATUS::HC_ASM_INVALID;
-
-            return hcasm_to_text[static_cast<unsigned char>(HCASMSTATUS::HC_ASM_INVALID)];
-        }
-
         // helper function for comparing bytes
         static bool(*comparebytes)(unsigned char* a, pkhc_byte_t b, pkhc_size_t size) = [](unsigned char* a, pkhc_byte_t b, pkhc_size_t size) -> bool
         {
@@ -784,6 +774,23 @@ namespace utils
 
             return true;
         };
+
+        static const char* hcasm_to_text[] =
+        {
+            "Invalid",
+            "Disabled",
+            "Enabled"
+        };
+
+        if (!pt || !pt->byte_old || !pt->offset || !pt->size)
+        {
+            MessageBoxA(ui::handle::frm_Main, pt ? pt->id : "No ID", "Invalid patch table", 0);
+
+            if (out_status)
+                *out_status = HCASMSTATUS::HC_ASM_INVALID;
+
+            return hcasm_to_text[static_cast<unsigned char>(HCASMSTATUS::HC_ASM_INVALID)];
+        }
 
         DWORD          oldProtect = 0; // Stores the old protection flag of the memory section
         unsigned char  singlebyte = 0x0; // Used if allocation is unecessary

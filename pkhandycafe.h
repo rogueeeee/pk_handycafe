@@ -29,8 +29,6 @@
 #define _PKHC_OPCODE_NOP 0x90 // Opcode for the NOP instruction
 #define _PKHC_SL_VK_PATCH VK_INSERT // Key to listen for executing the spoof lockscreen event
 
-typedef unsigned char* ptr_t; // Pointer type
-
 enum class FeatureMethod : bool
 {
     DISABLE = false,
@@ -46,14 +44,8 @@ enum class HandyCafeVersion : unsigned char
     V4_1_16
 };
 
-const char* hcasm_to_text[] =
-{
-    "Invalid",
-    "Disabled",
-    "Enabled"
-};
-
-typedef void(*FeatureFn)(FeatureMethod);
+typedef unsigned char* ptr_t;            // Pointer type
+typedef void(*FeatureFn)(FeatureMethod); // Feature method function pointer
 
 #define WND_CLASSNAME "handycafee"
 #define WND_TITLE "HandyCafe Client"
@@ -106,7 +98,7 @@ namespace ui
         HWND btn_Feature_NoAuthentication_Disable = nullptr;
     }
 
-#define PK_CTRL_ID(name, value) const HMENU name = reinterpret_cast<HMENU>(value)
+    #define PK_CTRL_ID(name, value) const HMENU name = reinterpret_cast<HMENU>(value)
     namespace id
     {
         PK_CTRL_ID(btn_Attach, 1);
@@ -142,7 +134,7 @@ namespace ui
     namespace status
     {
         char str[51] = "Ready...";
-        int len = sizeof("Ready...");
+        int  len     = sizeof("Ready...");
 
         void set(const char* text)
         {
@@ -163,9 +155,9 @@ namespace handycafe
     constexpr FNV64  name    = utils::hashfnv("hndclient.exe");
     constexpr size_t namelen = 14;
 
-    DWORD            pid     = 0;                             // Proccess ID
-    HANDLE           handle  = nullptr;                       // Handle to the handy cafe process
-    ptr_t            base    = nullptr;                       // Base address of the process main module
+    DWORD            pid     = 0;                      // Proccess ID
+    HANDLE           handle  = nullptr;                // Handle to the handy cafe process
+    ptr_t            base    = nullptr;                // Base address of the process main module
     HandyCafeVersion ver     = HandyCafeVersion::NONE; // Handy cafe version
 
     // Handy cafe version
