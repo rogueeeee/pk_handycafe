@@ -98,7 +98,7 @@ namespace ui
         HWND btn_Feature_NoAuthentication_Disable = nullptr;
     }
 
-    #define PK_CTRL_ID(name, value) const HMENU name = reinterpret_cast<HMENU>(value)
+    #define PK_CTRL_ID(name, value) constexpr WORD name = value
     namespace id
     {
         PK_CTRL_ID(btn_Attach, 1);
@@ -218,32 +218,6 @@ namespace handycafe
 
 }
 
-// Namespace for pkhc's features
-namespace features
-{
-    void NoLockscreen(FeatureMethod fm);
-    void NoProcClear(FeatureMethod fm);
-    void NoBrowserOnLogin(FeatureMethod fm);
-    void NoRemoteShutdown(FeatureMethod fm);
-    void ExitHC(FeatureMethod fm);
-    void NoForegroundQuery(FeatureMethod fm);
-    #ifndef PKHC_DISABLE_SPOOF
-    void SpoofLockscreen(FeatureMethod fm);
-    #endif
-    void NoAuthentication(FeatureMethod fm);
-
-    // Namespace for v3.3.21 specific functions
-    namespace v3321
-    {
-    }
-
-    // Namespace for v4.1.16 specific functions
-    namespace v4116
-    {
-    }
-
-}
-
 // Namespace for pkhc
 namespace pkhc
 {
@@ -270,12 +244,38 @@ namespace pkhc
     // Function pointer to proper feature function
     FeatureFn FeatureFn_NoLockscreen      = FeatureFn_Default;
     FeatureFn FeatureFn_NoProcClear       = FeatureFn_Default;
-    FeatureFn FeatureFn_NoBrowserOnLogin  = FeatureFn_Default;
+    FeatureFn FeatureFn_NoBrowserLogin    = FeatureFn_Default;
     FeatureFn FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
     FeatureFn FeatureFn_ExitHC            = FeatureFn_Default;
     FeatureFn FeatureFn_NoForegroundQuery = FeatureFn_Default;
     FeatureFn FeatureFn_SpoofLockscreen   = FeatureFn_Default;
     FeatureFn FeatureFn_NoAuthentication  = FeatureFn_Default;
+}
+
+// Namespace for pkhc's features
+namespace features
+{
+    void NoLockscreen(FeatureMethod fm);
+    void NoProcClear(FeatureMethod fm);
+    void NoBrowserOnLogin(FeatureMethod fm);
+    void NoRemoteShutdown(FeatureMethod fm);
+    void ExitHC(FeatureMethod fm);
+    void NoForegroundQuery(FeatureMethod fm);
+    #ifndef PKHC_DISABLE_SPOOF
+    void SpoofLockscreen(FeatureMethod fm);
+    #endif
+    void NoAuthentication(FeatureMethod fm);
+
+    // Namespace for v3.3.21 specific functions
+    namespace v3321
+    {
+    }
+
+    // Namespace for v4.1.16 specific functions
+    namespace v4116
+    {
+    }
+
 }
 
 namespace utils

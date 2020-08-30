@@ -113,82 +113,127 @@ LRESULT __stdcall WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         case WM_CREATE:
         {
-            ui::handle::btn_Attach = CreateWindowExA(0, "button", "Attach", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 5, 84, 50, 20, hWnd, ui::id::btn_Attach, NULL, NULL);
-            ui::handle::btn_Check = CreateWindowExA(0, "button", "Check Assembly", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 58, 84, 120, 20, hWnd, ui::id::btn_Check, NULL, NULL);
-            ui::handle::btn_About = CreateWindowExA(0, "button", "?", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 40, 84, 20, 20, hWnd, ui::id::btn_About, NULL, NULL);
+            ui::handle::btn_Attach = CreateWindowExA(0, "button", "Attach", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 5, 84, 50, 20, hWnd, (HMENU)ui::id::btn_Attach, NULL, NULL);
+            ui::handle::btn_Check = CreateWindowExA(0, "button", "Check Assembly", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, 58, 84, 120, 20, hWnd, (HMENU)ui::id::btn_Check, NULL, NULL);
+            ui::handle::btn_About = CreateWindowExA(0, "button", "?", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 40, 84, 20, 20, hWnd, (HMENU)ui::id::btn_About, NULL, NULL);
 
             // No lockscreen feature            
-            ui::handle::btn_Feature_NoLockscreen_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 108, 60, 20, hWnd, ui::id::btn_Feature_NoLockscreen_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoLockscreen_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 108, 60, 20, hWnd, ui::id::btn_Feature_NoLockscreen_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoLockscreen_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 108, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoLockscreen_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoLockscreen_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 108, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoLockscreen_Disable, NULL, NULL);
 
             // No Process clearing feature             
-            ui::handle::btn_Feature_NoProcClear_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 130, 60, 20, hWnd, ui::id::btn_Feature_NoProcClear_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoProcClear_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 130, 60, 20, hWnd, ui::id::btn_Feature_NoProcClear_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoProcClear_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 130, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoProcClear_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoProcClear_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 130, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoProcClear_Disable, NULL, NULL);
 
             // No browser when logging in
-            ui::handle::btn_Feature_NoBrowserLogin_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 152, 60, 20, hWnd, ui::id::btn_Feature_NoBrowserLogin_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoBrowserLogin_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 152, 60, 20, hWnd, ui::id::btn_Feature_NoBrowserLogin_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoBrowserLogin_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 152, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoBrowserLogin_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoBrowserLogin_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 152, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoBrowserLogin_Disable, NULL, NULL);
 
             // No remote shutdown
-            ui::handle::btn_Feature_NoRemoteShutdown_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 174, 60, 20, hWnd, ui::id::btn_Feature_NoRemoteShutdown_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoRemoteShutdown_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 174, 60, 20, hWnd, ui::id::btn_Feature_NoRemoteShutdown_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoRemoteShutdown_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 174, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoRemoteShutdown_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoRemoteShutdown_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 174, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoRemoteShutdown_Disable, NULL, NULL);
 
             // Exit handycafe             
-            ui::handle::btn_Feature_ExitHC = CreateWindowExA(0, "button", "Activate", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 196, 125, 20, hWnd, ui::id::btn_Feature_ExitHC, NULL, NULL);
+            ui::handle::btn_Feature_ExitHC = CreateWindowExA(0, "button", "Activate", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 196, 125, 20, hWnd, (HMENU)ui::id::btn_Feature_ExitHC, NULL, NULL);
 
             // No foreground query
-            ui::handle::btn_Feature_NoForegroundQuery_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 219, 60, 20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoForegroundQuery_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 219, 60, 20, hWnd, ui::id::btn_Feature_NoForegroundQuery_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoForegroundQuery_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 219, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoForegroundQuery_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoForegroundQuery_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 219, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoForegroundQuery_Disable, NULL, NULL);
 
             // No authentication
-            ui::handle::btn_Feature_NoAuthentication_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 242, 60, 20, hWnd, ui::id::btn_Feature_NoAuthentication_Enable, NULL, NULL);
-            ui::handle::btn_Feature_NoAuthentication_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 242, 60, 20, hWnd, ui::id::btn_Feature_NoAuthentication_Disable, NULL, NULL);
+            ui::handle::btn_Feature_NoAuthentication_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 242, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoAuthentication_Enable, NULL, NULL);
+            ui::handle::btn_Feature_NoAuthentication_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 242, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_NoAuthentication_Disable, NULL, NULL);
 
             // Spoof lockscreen
-            ui::handle::btn_Feature_SpoofLockscreen_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 265, 60, 20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Enable, NULL, NULL);
-            ui::handle::btn_Feature_SpoofLockscreen_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 265, 60, 20, hWnd, ui::id::btn_Feature_SpoofLockscreen_Disable, NULL, NULL);
+            ui::handle::btn_Feature_SpoofLockscreen_Enable = CreateWindowExA(0, "button", "Enable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 145, 265, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_SpoofLockscreen_Enable, NULL, NULL);
+            ui::handle::btn_Feature_SpoofLockscreen_Disable = CreateWindowExA(0, "button", "Disable", WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON, WND_WIDTH - 80, 265, 60, 20, hWnd, (HMENU)ui::id::btn_Feature_SpoofLockscreen_Disable, NULL, NULL);
 
             break;
         }
 
         case WM_COMMAND:
         {
-            HMENU ctrl_id = reinterpret_cast<HMENU>(LOWORD(wParam));
+            const WORD ctrl_id = LOWORD(wParam);
 
             FeatureMethod flag = FeatureMethod::DISABLE;
 
-            if (ctrl_id == ui::id::btn_Attach)
-                pkhc::Initialize();
-            else if (ctrl_id == ui::id::btn_Check)
-                pkhc::CheckAssembly();
-            else if (ctrl_id == ui::id::btn_About)
+            switch (ctrl_id)
             {
-                if (MessageBoxA(ui::handle::frm_Main,
-                    "Runtime patching and modification tool for handyCafe\r\n\r\n"
-                    "https://github.com/rogueeeee/pk_handycafe\r\n"
-                    "\r\n"
-                    "Would you like to open the repository link of this software?",
-                    "pk for HandyCafe", MB_YESNO) == IDYES)
+                case ui::id::btn_Attach:
+                    pkhc::Initialize();
+                    break;
+
+                case ui::id::btn_Check:
+                    pkhc::CheckAssembly();
+                    break;
+
+                case ui::id::btn_About:
                 {
-                    ShellExecuteA(NULL, "open", "https://github.com/rogueeeee/pk_handycafe", NULL, NULL, SW_SHOWNORMAL);
+                    if (MessageBoxA(ui::handle::frm_Main,
+                        "Runtime patching and modification tool for handyCafe\r\n\r\n"
+                        "https://github.com/rogueeeee/pk_handycafe\r\n"
+                        "\r\n"
+                        "Would you like to open the repository link of this software?",
+                        "pk for HandyCafe", MB_YESNO) == IDYES)
+                    {
+                        ShellExecuteA(NULL, "open", "https://github.com/rogueeeee/pk_handycafe", NULL, NULL, SW_SHOWNORMAL);
+                    }
+                    break;
                 }
+
+                case ui::id::btn_Feature_ExitHC:
+                    pkhc::FeatureFn_ExitHC(FeatureMethod::ENABLE);
+                    break;
+
+                case ui::id::btn_Feature_NoLockscreen_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoLockscreen_Disable:
+                    pkhc::FeatureFn_NoLockscreen(flag);
+                    break;
+
+                case ui::id::btn_Feature_NoProcClear_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoProcClear_Disable:
+                    pkhc::FeatureFn_NoProcClear(flag);
+                    break;
+
+                case ui::id::btn_Feature_NoBrowserLogin_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoBrowserLogin_Disable:
+                    pkhc::FeatureFn_NoBrowserLogin(flag);
+                    break;
+
+                case ui::id::btn_Feature_NoRemoteShutdown_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoRemoteShutdown_Disable:
+                    pkhc::FeatureFn_NoRemoteShutdown(flag);
+                    break;
+
+                case ui::id::btn_Feature_NoForegroundQuery_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoForegroundQuery_Disable:
+                    pkhc::FeatureFn_NoForegroundQuery(flag);
+                    break;
+
+                case ui::id::btn_Feature_SpoofLockscreen_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_SpoofLockscreen_Disable:
+                    pkhc::FeatureFn_SpoofLockscreen(flag);
+                    break;
+
+                case ui::id::btn_Feature_NoAuthentication_Enable:
+                    flag = FeatureMethod::ENABLE;
+                    [[fallthrough]];
+                case ui::id::btn_Feature_NoAuthentication_Disable:
+                    pkhc::FeatureFn_SpoofLockscreen(flag);
+                    break;
             }
-            else if (ctrl_id == ui::id::btn_Feature_ExitHC)
-                pkhc::FeatureFn_ExitHC(FeatureMethod::ENABLE);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoLockscreen_Enable))      == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoLockscreen_Disable)
-                pkhc::FeatureFn_NoLockscreen(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoProcClear_Enable))       == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoProcClear_Disable)
-                pkhc::FeatureFn_NoProcClear(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Enable))    == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoBrowserLogin_Disable)
-                pkhc::FeatureFn_NoBrowserOnLogin(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Enable))  == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoRemoteShutdown_Disable)
-                pkhc::FeatureFn_NoRemoteShutdown(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Enable)) == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoForegroundQuery_Disable)
-                pkhc::FeatureFn_NoForegroundQuery(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Enable))   == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_SpoofLockscreen_Disable)
-                pkhc::FeatureFn_SpoofLockscreen(flag);
-            else if ((flag = static_cast<FeatureMethod>(ctrl_id == ui::id::btn_Feature_NoAuthentication_Enable))  == FeatureMethod::ENABLE || ctrl_id == ui::id::btn_Feature_NoAuthentication_Disable)
-                pkhc::FeatureFn_NoAuthentication(flag);
 
             break;
         }
@@ -387,7 +432,7 @@ namespace pkhc
         // Reset procedure: features
         pkhc::FeatureFn_NoLockscreen      = FeatureFn_Default;
         pkhc::FeatureFn_NoProcClear       = FeatureFn_Default;
-        pkhc::FeatureFn_NoBrowserOnLogin  = FeatureFn_Default;
+        pkhc::FeatureFn_NoBrowserLogin  = FeatureFn_Default;
         pkhc::FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
         pkhc::FeatureFn_NoForegroundQuery = FeatureFn_Default;
         pkhc::FeatureFn_ExitHC            = FeatureFn_Default;
@@ -588,7 +633,7 @@ namespace pkhc
             {
                 pkhc::FeatureFn_NoLockscreen      = features::NoLockscreen;
                 pkhc::FeatureFn_NoProcClear       = features::NoProcClear;
-                pkhc::FeatureFn_NoBrowserOnLogin  = features::NoBrowserOnLogin;
+                pkhc::FeatureFn_NoBrowserLogin  = features::NoBrowserOnLogin;
                 pkhc::FeatureFn_NoRemoteShutdown  = features::NoRemoteShutdown;
                 pkhc::FeatureFn_ExitHC            = features::ExitHC;
                 pkhc::FeatureFn_NoForegroundQuery = features::NoForegroundQuery;
@@ -606,7 +651,7 @@ namespace pkhc
             {
                 pkhc::FeatureFn_NoLockscreen      = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoProcClear       = pkhc::FeatureFn_NotSupported;
-                pkhc::FeatureFn_NoBrowserOnLogin  = pkhc::FeatureFn_NotSupported;
+                pkhc::FeatureFn_NoBrowserLogin  = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoRemoteShutdown  = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_ExitHC            = pkhc::FeatureFn_NotSupported;
                 pkhc::FeatureFn_NoForegroundQuery = pkhc::FeatureFn_NotSupported;
