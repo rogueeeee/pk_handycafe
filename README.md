@@ -1,6 +1,8 @@
 # <img width="28" src="https://en.touhouwiki.net/images/7/7b/Th135Patchouli.png"> <font size=80> pk for handyCafe </font>
 Runtime patching and modification tool for handyCafe
 
+<img src ="https://raw.githubusercontent.com/rogueeeee/pk_handycafe/master/ss.png"/>
+
 ## Features
 * <b>No logout lockscreen</b> - Disables logout of client both for Client (Logout user, Credit expiration, etc...) and Server (Logout user) side
 * <b>No Process clear</b> - Disables the clearing / termination of process on log out
