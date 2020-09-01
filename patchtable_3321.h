@@ -63,7 +63,8 @@ namespace patchtable_3321
         0x127C1A,
         2
     };
-#ifndef PKHC_DISABLE_SPOOF
+
+    #ifndef PKHC_DISABLE_SPOOF
     patchtable_t __SpoofLockscreen_next_setupdesktop =
     {
         "sl_7",
@@ -129,7 +130,8 @@ namespace patchtable_3321
         0x9F693,
         3,
     };
-#endif
+    #endif
+
     patchtable_t NoAuthentication =
     {
         "na",

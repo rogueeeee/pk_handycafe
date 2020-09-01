@@ -102,9 +102,9 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         DispatchMessage(&msg);
     }
 
-#ifndef PKHC_DISABLE_SPOOF
+    #ifndef PKHC_DISABLE_SPOOF
     SpoofLockscreenKeyListener.join();
-#endif
+    #endif
 
     return static_cast<int>(msg.wParam);
 }
@@ -435,7 +435,7 @@ namespace pkhc
         // Reset procedure: features
         pkhc::FeatureFn_NoLockscreen      = FeatureFn_Default;
         pkhc::FeatureFn_NoProcClear       = FeatureFn_Default;
-        pkhc::FeatureFn_NoBrowserLogin  = FeatureFn_Default;
+        pkhc::FeatureFn_NoBrowserLogin    = FeatureFn_Default;
         pkhc::FeatureFn_NoRemoteShutdown  = FeatureFn_Default;
         pkhc::FeatureFn_NoForegroundQuery = FeatureFn_Default;
         pkhc::FeatureFn_ExitHC            = FeatureFn_Default;
