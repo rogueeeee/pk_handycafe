@@ -17,7 +17,7 @@ Runtime patching and modification tool for handyCafe
 * handyCafe 3.3.21 (21/July/2010)
 * handyCafe 4.1.16 (10/August/2016)
 
-## Compiling
+## Building
 <i>Open in Visual Studio through <b>pk_handycafe.vcxproj</b>, setup the build config, and press <b>Ctrl + B</b></i>
 * Solution Config: Release
 * Solution Platform: x86

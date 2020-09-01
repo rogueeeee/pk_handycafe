@@ -2,28 +2,31 @@
 
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-    // Window class for the main ui
-    WNDCLASSEXA wndclass =
+    // Create and register window class
     {
-        sizeof(WNDCLASSEXA),
-        (CS_HREDRAW | CS_VREDRAW),
-        WndProc,
-        0,
-        0,
-        hInstance,
-        NULL,
-        LoadCursor(nullptr, IDC_ARROW),
-        reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1),
-        NULL,
-        WND_CLASSNAME,
-        NULL
-    };
+        // Window class for the main ui
+        WNDCLASSEXA wndclass =
+        {
+            sizeof(WNDCLASSEXA),
+            (CS_HREDRAW | CS_VREDRAW),
+            WndProc,
+            0,
+            0,
+            hInstance,
+            NULL,
+            LoadCursor(nullptr, IDC_ARROW),
+            reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1),
+            NULL,
+            WND_CLASSNAME,
+            NULL
+        };
 
-    // Register the window class
-    if (!RegisterClassExA(&wndclass))
-    {
-        MessageBoxA(NULL, "Failed to register class! Exiting", WND_TITLE, 0);
-        return 1;
+        // Register the window class
+        if (!RegisterClassExA(&wndclass))
+        {
+            MessageBoxA(NULL, "Failed to register class! Exiting", WND_TITLE, 0);
+            return 1;
+        }
     }
 
     // Create the main UI
