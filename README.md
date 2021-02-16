@@ -1,3 +1,5 @@
+# New: [patchii2](https://github.com/rogueeeee/patchii2)
+
 # <img width="28" src="https://en.touhouwiki.net/images/7/7b/Th135Patchouli.png"> <font size=80> pk for handyCafe </font>
 Runtime patching and modification tool for handyCafe
 
